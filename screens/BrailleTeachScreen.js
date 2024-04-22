@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     topImg: {
         alignSelf: 'center',
         top: '10%',
-        width: '85%',
+        width: '93%',
         height: '25%',
     },
     blueBox: {
