@@ -85,8 +85,8 @@ const RegisterScreen = ({ navigation }) => {
             <View style={styles.container}>
                 <Text style={styles.textTopic}>Register</Text>
                 <Image style={styles.bgImg} source={require('../assets/logo1.png')}></Image>
-                <View style={styles.overlay}></View>
                 <Text style={styles.textWelcome}>MagicLearn</Text>
+                <View style={styles.field}>
                 <Text style={styles.textEmail}>Email:</Text>
                 <TextInput
                     style={styles.input}
@@ -147,7 +147,8 @@ const RegisterScreen = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.createAcc} onPress={handleCreate}>
                     <Text style={styles.createTxt}>Already have an account?</Text>
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                </View>
                 {<Text style={styles.errorMessage}>{errorMessage}</Text>}
                 {isLoading && <ActivityIndicator size="large" color="#FF3939" />}
             </View>
@@ -163,14 +164,14 @@ const styles = StyleSheet.create({
     container: {
         position: 'relative',
         width: 'auto',
-        height: 800,
+        height: '100%',
         backgroundColor: '#Add8e6',
     },
     bgImg: {
         alignSelf: 'center',
-        top: '10%',
-        width: '100%',
-        height: '80%',
+        top: '6%',
+        width: '35%',
+        height: '25%',
         borderWidth: 1,
         borderRadius: 90,
     },
@@ -179,14 +180,14 @@ const styles = StyleSheet.create({
         fontWeight: '900',
         fontSize: 35,
         color: '#05056E',
-        top: '12%'
+        top: '8%'
     },
     textWelcome: {
         textAlign: 'center',
         fontWeight: '900',
         fontSize: 25,
         color: '#4D86F7',
-        bottom: '60%'
+        top: '2%'
     },
     textEmail: {
         left: '11%',
@@ -211,12 +212,12 @@ const styles = StyleSheet.create({
     eyeIcon: {
         position: 'absolute',
         right: '10%',
-        bottom: '45%'
+        bottom: '115%'
     },
     eyeIcon1: {
         position: 'absolute',
         right: '10%',
-        bottom: '33%'
+        bottom: '91%'
     },
     eyeIconText: {
         fontSize: 20,
@@ -226,12 +227,12 @@ const styles = StyleSheet.create({
         bottom: '55%',
         backgroundColor: '#4D86F7',
         width: '30%',
-        height: '5%',
+        height: '10%',
         padding: 10,
         borderRadius: 10
     },
     loginTxt: {
-        color: '#FFD166',
+        color: '#ffff',
         fontSize: 15,
         height: 37.5,
         textAlign: 'center',
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
     createAcc: {
         alignSelf: 'center',
         bottom: '50%',
-        borderRadius: 10
+        borderRadius: 10,
     },
     createTxt: {
         color: '#4D86F7',
@@ -254,13 +255,9 @@ const styles = StyleSheet.create({
         color: 'red',
         marginTop: 20,
     },
-    overlay: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',
-        top: '21%',
-        height: '90%',
-        borderRadius: 85,
-    }
+    field: {
+        top: '30%'
+    },
 });
 
 export default RegisterScreen;

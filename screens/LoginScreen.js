@@ -70,7 +70,7 @@ const LoginScreen = ({ navigation }) => {
                     saveCredentials(email, password);
 
 
-                    navigation.navigate('Braille');
+                    navigation.navigate('Home');
                 })
                 .catch(error => {
                     // Handle login errors (e.g., incorrect email or password)
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     container: {
         position: 'relative',
         width: 'auto',
-        height: 800,
+        height: '100%',
         backgroundColor: '#Add8e6',
     },
     bgImg: {
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: '900',
         fontSize: 30,
-        color: '#05056E',
+        color: '#4D86F7',
     },
     textEmail: {
         left: '11%',
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
 
     eyeIcon: {
         position: 'absolute',
-        right: '10%',
+        right: '15%',
         bottom: '104%'
     },
     eyeIconText: {

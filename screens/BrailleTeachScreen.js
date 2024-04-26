@@ -48,12 +48,12 @@ const styles = StyleSheet.create({
         height: '25%',
     },
     blueBox: {
-        top: '15%',
-        backgroundColor: '#ADD8E6',
-        alignSelf: 'center',
-        height: '35%',
-        width: '95%',
-        borderRadius: 20
+            top: '15%',
+            backgroundColor: '#ADD8E6',
+            alignSelf: 'center',
+            height: '35%',
+            width: '95%',
+            borderRadius: 20
     },
     textInstr: {
         top: '15%',
