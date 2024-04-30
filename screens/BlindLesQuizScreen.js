@@ -3,40 +3,29 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
 const BlindLessonScreen = ({ navigation }) => {
 
-    const handleButton1PressAnimal = () => {
-        navigation.navigate('Braille');
-    };
-
-    const handleButton1PressHuman = () => {
-        navigation.navigate('Braille');
-    };
-
-    const handleButton1PressFamily = () => {
-        navigation.navigate('Braille');
-    };
-
-    const handleButton1PressFruit = () => {
-        navigation.navigate('Braille');
+    const handleButtonPress = (category) => {
+        navigation.navigate('LessonCat', { category });
+        console.log('cat: ', category);
     };
 
     return (
         <View style={styles.container}>
             <Image style={styles.coverImg} source={require('../assets/blindkids.jpg')}></Image>
-            <Text style={styles.subText}>Please choose an Category:</Text>
+            <Text style={styles.subText}>Please choose a Category:</Text>
             <View style={styles.tile}>
-            <Text style={styles.catText}>Category</Text>
-            <TouchableOpacity style={styles.button1} onPress={handleButton1PressAnimal}>
-                <Text style={styles.buttonText}>Animals</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button2} onPress={handleButton1PressHuman}>
-                <Text style={styles.buttonText}>Human Body</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button3} onPress={handleButton1PressFamily}>
-                <Text style={styles.buttonText}>Family Members</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button4} onPress={handleButton1PressFruit}>
-                <Text style={styles.buttonText}>Fruits/Vegetables</Text>
-            </TouchableOpacity>
+                <Text style={styles.catText}>Category</Text>
+                <TouchableOpacity style={styles.button1} onPress={() => handleButtonPress('Animals')}>
+                    <Text style={styles.buttonText}>Animals</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button2} onPress={() => handleButtonPress('Human Body')}>
+                    <Text style={styles.buttonText}>Human Body</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button3} onPress={() => handleButtonPress('Transportation')}>
+                    <Text style={styles.buttonText}>Transportation</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button4} onPress={() => handleButtonPress('Fruits/Vegetables')}>
+                    <Text style={styles.buttonText}>Fruits/Vegetables</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );

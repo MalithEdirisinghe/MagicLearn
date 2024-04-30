@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { speak } from "expo-speech";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const brailleMappings = {
     A: [[true, false, false], [false, false, false]],
@@ -40,6 +42,7 @@ const LetterScreen = ({ route }) => {
     const { range } = route.params;
     const [letter, setLetter] = useState(range.charAt(0));
     const [isLastLetter, setIsLastLetter] = useState(false);
+    const navigation = useNavigation(); 
 
     const filteredMappings = Object.fromEntries(
         Object.entries(brailleMappings).filter(([key]) => {
@@ -79,7 +82,11 @@ const LetterScreen = ({ route }) => {
     const nextButton = () => {
         const nextLetter = String.fromCharCode(letter.charCodeAt(0) + 1);
         setLetter(nextLetter);
-    }
+    };
+
+    const handleBack = () => {
+        navigation.goBack();
+    };
 
     return (
         <View style={styles.container}>
@@ -112,10 +119,14 @@ const LetterScreen = ({ route }) => {
                     <Text style={styles.nextText}>Next</Text>
                 </TouchableOpacity>
             )}
+            {!isLastLetter ? null : (
+                <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+                    <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+                </TouchableOpacity>
+            )}
         </View>
     );
 };
-
 
 const styles = StyleSheet.create({
     container: {
@@ -168,6 +179,14 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         alignSelf: 'center',
         paddingTop: 15,
+    },
+    backButton: {
+        position: "absolute",
+        top: 20,
+        left: 20,
+        backgroundColor: '#4D86F7',
+        borderRadius: 15,
+        padding: 10,
     },
 });
 

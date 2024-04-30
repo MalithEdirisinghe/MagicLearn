@@ -9,6 +9,8 @@ import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
 import BlindHomeScreen from './screens/BlindHomeScreen';
 import BlindLesQuizScreen from './screens/BlindLesQuizScreen';
+import LessonCategoryScreen from './screens/LessonCategoryScreen';
+import BlindLessonScreen from './screens/BlindLessonScreen';
 
 
 const Stack = createStackNavigator();
@@ -63,6 +65,18 @@ const App = () => {
           name="BlindQuiz"
           component={BlindLesQuizScreen}
           options={{ title: 'Voice Learner', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
+        />
+
+        <Stack.Screen
+          name="LessonCat"
+          component={LessonCategoryScreen}
+          options={{ title: 'Category', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
+        />
+
+        <Stack.Screen
+          name="Lesson"
+          component={BlindLessonScreen}
+          options={{ title: 'Select Category', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
         />
       </Stack.Navigator>
     </NavigationContainer>
