@@ -142,7 +142,7 @@ const ASLScreen = ({ navigation, route }) => {
             )}
             {!quizStarted && currentLetterIndex < letters.length - 1 && (
                 <TouchableOpacity style={styles.nextButton} onPress={handleNextLetter}>
-                    <Text style={styles.buttonText}>Next</Text>
+                    <Text style={styles.buttonText}>Next One</Text>
                 </TouchableOpacity>
             )}
             {!quizStarted && currentLetterIndex === letters.length - 1 && (
