@@ -28,8 +28,12 @@ const HomeScreen = ({ navigation }) => {
         };
     }, []);
 
-    const handleButtonPress = () => {
+    const handleBlindButtonPress = () => {
         navigation.navigate('BlindHome');
+    };
+
+    const handleMuteButtonPress = () => {
+        navigation.navigate('MuteHome');
     };
 
     const handleLogout = async () => {
@@ -72,10 +76,10 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.container}>
             <Image style={styles.coverImg} source={images[imageIndex]}></Image>
             <Text style={styles.title}>Welcome to MagicLearn!</Text>
-            <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
+            <TouchableOpacity style={styles.button} onPress={handleBlindButtonPress}>
                 <Text style={styles.buttonText}>Blind</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('Button 2')}>
+            <TouchableOpacity style={styles.button} onPress={handleMuteButtonPress}>
                 <Text style={styles.buttonText}>Deaf & Mute</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.logoutButton} onPress={handleLogoutButtonPress}>

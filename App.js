@@ -11,6 +11,9 @@ import BlindHomeScreen from './screens/BlindHomeScreen';
 import BlindLesQuizScreen from './screens/BlindLesQuizScreen';
 import LessonCategoryScreen from './screens/LessonCategoryScreen';
 import BlindLessonScreen from './screens/BlindLessonScreen';
+import MuteHomeScreen from './screens/MuteHomeScreen';
+import LearnSignLanguageScreen from './screens/LearnSignLanguageScreen';
+import ASLScreen from './screens/ASLScreen';
 
 
 const Stack = createStackNavigator();
@@ -77,6 +80,24 @@ const App = () => {
           name="Lesson"
           component={BlindLessonScreen}
           options={{ title: 'Select Category', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
+        />
+
+        <Stack.Screen
+          name="MuteHome"
+          component={MuteHomeScreen}
+          options={{ title: 'Learn for Deaf & Mute Kids', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
+        />
+
+        <Stack.Screen
+          name="LearnSign"
+          component={LearnSignLanguageScreen}
+          options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
+        />
+
+        <Stack.Screen
+          name="ASL"
+          component={ASLScreen}
+          options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
         />
       </Stack.Navigator>
     </NavigationContainer>

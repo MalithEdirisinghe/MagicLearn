@@ -28,31 +28,31 @@ const BrailleMenuScreen = ({ navigation }) => {
         <View style={styles.container}>
             <Image style={styles.speaker} source={require('../assets/speaker.png')}></Image>
 
-            <TouchableOpacity style={styles.AtoE} onPress={handleAtoE}>
+            <TouchableOpacity style={styles.list} onPress={handleAtoE}>
                 <Text style={styles.text1}>1.                           A to E</Text>
             </TouchableOpacity>
 
             <Text></Text>
 
-            <TouchableOpacity style={styles.AtoE} onPress={handleFtoJ}>
+            <TouchableOpacity style={styles.list} onPress={handleFtoJ}>
                 <Text style={styles.text1}>2.                           F to J</Text>
             </TouchableOpacity>
 
             <Text></Text>
 
-            <TouchableOpacity style={styles.AtoE} onPress={handleKtoO}>
+            <TouchableOpacity style={styles.list} onPress={handleKtoO}>
                 <Text style={styles.text1}>3.                           K to O</Text>
             </TouchableOpacity>
 
             <Text></Text>
 
-            <TouchableOpacity style={styles.AtoE} onPress={handlePtoT}>
+            <TouchableOpacity style={styles.list} onPress={handlePtoT}>
                 <Text style={styles.text1}>4.                           P to T</Text>
             </TouchableOpacity>
 
             <Text></Text>
 
-            <TouchableOpacity style={styles.AtoE} onPress={handleUtoZ}>
+            <TouchableOpacity style={styles.list} onPress={handleUtoZ}>
                 <Text style={styles.text1}>5.                           U to Z</Text>
             </TouchableOpacity>
         </View>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         top: '8%'
     },
-    AtoE: {
+    list: {
         top: '15%',
         backgroundColor: '#ADD8E6',
         alignSelf: 'center',

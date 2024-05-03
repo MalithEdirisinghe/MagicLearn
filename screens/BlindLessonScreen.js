@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Button, ScrollView } from 'react-native';
 import { speak } from 'expo-speech';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
@@ -83,6 +83,20 @@ const BlindLessonScreen = ({ route }) => {
             "How does a whale swim?",
             "What is a notable characteristic of whales?",
             "How do whales breathe and communicate?"
+        ],
+        'Horse': [
+            "What sound does a horse make?",
+            "What is the horse's mane?",
+            "How many legs does a horse have?",
+            "What do horses use to walk?",
+            "What do you call a baby horse?"
+        ],
+        'Rabbit': [
+            "What sound does a rabbit make?",
+            "How many ears does a rabbit have?",
+            "What do rabbits use to move around?",
+            "What covers the body of a rabbit?",
+            "What do you call a group of rabbits?"
         ],
         // Add more categories and their corresponding questions as needed
     };
@@ -189,6 +203,7 @@ const BlindLessonScreen = ({ route }) => {
 
 
     const [transcription, setTranscription] = useState(null);
+    const [responses, setResponses] = useState([]);
 
     const sendAudioToCloudFunction = async (base64Audio) => {
         try {
@@ -206,11 +221,13 @@ const BlindLessonScreen = ({ route }) => {
             }
 
             const result = await response.text();
-            console.log(result); // Should print 'Conversion successful' if successful
+            console.log(result); 
         } catch (error) {
             console.error('Error:', error.message);
         }
     };
+
+    const [showResponses, setShowResponses] = useState(false);
 
     const sendAudioToSpeechToText = async () => {
         try {
@@ -276,7 +293,16 @@ const BlindLessonScreen = ({ route }) => {
             }
 
             // Update state with the transcript
-            setTranscription(transcript);
+            const updatedResponses = [...responses, transcript];
+            setResponses(updatedResponses);
+
+            if (currentQuestionIndex < questions.length - 1) {
+                setCurrentQuestionIndex(currentQuestionIndex + 1);
+                speakQuestion(questions[currentQuestionIndex + 1]);
+            } else {
+                setShowResponses(true);
+                console.log('Data: ', updatedResponses);
+            }
         } catch (error) {
             console.error('Error:', error);
         }
@@ -298,9 +324,6 @@ const BlindLessonScreen = ({ route }) => {
                 )}
                 keyExtractor={(item, index) => index.toString()}
             />
-            <TouchableOpacity onPress={sendAudioToSpeechToText}>
-                <Text>obanna</Text>
-            </TouchableOpacity>
             {showQuiz && (
                 <View style={styles.quizContainer}>
                     <Text style={styles.quizHeader}>Quiz Questions</Text>
@@ -323,6 +346,22 @@ const BlindLessonScreen = ({ route }) => {
                     <Text style={styles.transcriptionText}>{transcription}</Text>
                 </View>
             )}
+            {showResponses && (
+                <View style={styles.responsesContainer}>
+                    <Text style={styles.responsesHeader}>Your Answers</Text>
+                    <FlatList
+                        data={responses}
+                        renderItem={({ item, index }) => (
+                            <Text style={styles.responseItem}>{`Question ${index + 1}: ${item}`}</Text>
+                        )}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                </View>
+            )}
+
+            <TouchableOpacity style={styles.submitBtn} onPress={sendAudioToSpeechToText}>
+                <Text style={styles.submitTxt}>Submit</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -359,9 +398,11 @@ const styles = StyleSheet.create({
     buttonContainer: {
         marginTop: 20,
         alignSelf: 'center',
+        bottom: '10%'
     },
     quizContainer: {
         marginTop: 20,
+        bottom: '10%'
     },
     quizHeader: {
         fontSize: 20,
@@ -387,6 +428,19 @@ const styles = StyleSheet.create({
     },
     recognizedText: {
         fontSize: 16,
+    },
+    submitBtn: {
+        backgroundColor: '#4D86F7',
+        width: '35%',
+        height: '5%',
+        borderRadius: 8,
+        alignSelf: 'center',
+    },
+    submitTxt: {
+        color: '#fff',
+        fontSize: 20,
+        alignSelf: 'center',
+        top: '15%'
     },
 });
 
