@@ -11,13 +11,34 @@ const BlindLessonScreen = ({ route }) => {
 
     const lessonsData = {
         'Dog': [
-            { name: 'Dog', lesson: "A dog is a friendly animal with fur all over its body. Dogs have four legs and a wagging tail. They use their nose to smell things around them. Dogs come in different sizes and colors. Some dogs are big like a bear, while others are small like a toy. Dogs make sounds like 'bark' or 'woof' to communicate with people." }
+            { name: 'Dog', lesson: "A dog is a friendly animal with fur all over its body. Dogs have four legs and a wagging tail. They use their nose to smell things around them. Dogs come in different sizes and colors. Some dogs are big like a bear, while others are small like a toy. Dogs make sounds like 'bark' or 'woof'." }
         ],
         'Whale': [
             { name: 'Whale', lesson: "A whale is a large marine mammal that lives in the ocean.It has a streamlined body with smooth, dark skin and a powerful tail for swimming.Whales are known for their immense size, with some species being the largest animals on Earth.They breathe air through blowholes on top of their heads and communicate with each other using various vocalizations." }
         ],
+        'Cat': [
+            { name: 'Cat', lesson: "A cat is a small furry animal. It has soft fur that you can feel with your hands. Cats have four legs and a long tail. They use their whiskers to feel things around them. Cats have pointy ears on top of their head and a cute little nose. Cats like to purr when they are happy or relaxed. They make sounds like meow." }
+        ],
+        'Elephant': [
+            { name: 'Elephant', lesson: "An elephant is a big, strong animal. It has four thick legs and large ears. Elephants have a rough, wrinkled skin that you can feel. They have a long trunk that they use for smelling, breathing, and picking up things. Elephants have two long, curved tusks that you can touch. They make deep, rumbling sounds called trumpets." }
+        ],
+        'Parrot': [
+            { name: 'Parrot', lesson: "A parrot is a colorful bird with feathers. It has a curved beak that it uses for eating. Parrots have two wings and two legs. Some parrots can talk like humans! They mimic sounds they hear, and they can learn many words. Parrots like to chirp, squaw and whistle to communicate with each other and with people." }
+        ],
+        'Cow': [
+            { name: 'Cow', lesson: "A cow is a large, gentle animal with four legs and a big body. They have a thick coat of fur that you can feel. Cows come in different colors like black, brown, or white. They have a long tail that they use to swat flies. Cows eat grass and hay. They make sounds like." }
+        ],
         'Horse': [
             { name: 'Horse', lesson: "A horse is a strong and majestic animal. Horses have a mane on their neck and a long tail. They have four legs and hooves that make clip-clop sounds when they walk. Horses come in many colors like brown, black, or white. Some horses are tall like a tree, while others are smaller like a pony. Horses neigh to communicate with other horses and humans." }
+        ],
+        'Frog': [
+            { name: 'Frog', lesson: "A frog is a small amphibian that lives near water. They have smooth, moist skin. Frogs have long hind legs for jumping and short front legs for gripping. They have big, bulging eyes and a wide mouth. Frogs come in different colors like green, brown, or gray. They make sounds like 'ribbit' or 'croak' to attract mates" }
+        ],
+        'Snake': [
+            { name: 'Snake', lesson: "A snake is a long, slender reptile with no legs. They have smooth, scaly skin that you can feel. Snakes come in different colors and patterns. Some snakes are green like grass, while others are brown or black. Snakes use their forked tongue to smell and their sharp fangs to inject venom. They hiss to warn others when they feel threatened." }
+        ],
+        'Chicken(Rooster)': [
+            { name: 'Chicken(Rooster)', lesson: "A chicken is a small bird with feathers all over its body. They have a beak that you can feel and two wings for flying. Chickens have two legs and scratch the ground with their claws. They come in different colors like white, brown, or black. Chickens lay eggs, and they make sounds like 'cluck' or 'bawk'." }
         ],
         'Rabbit': [
             { name: 'Rabbit', lesson: "A rabbit is a small furry animal with long ears. Rabbits have soft fur that you can pet. They have four legs and a fluffy tail. Rabbits come in different colors like gray, brown, or white. Some rabbits have spots or stripes on their fur. Rabbits hop around using their strong back legs. They make sounds like 'thump' or 'sniff' as they move and explore." }
@@ -71,34 +92,59 @@ const BlindLessonScreen = ({ route }) => {
 
     const questionsData = {
         'Dog': [
-            "What sound does a dog make?",
-            "How many legs does a dog have?",
-            "What part of their body do dogs use to smell things?",
-            "What is the tail of a dog used for?",
-            "What do you call a baby dog?"
+            { question: "How many legs does a dog have?", correctAnswer: "four legs", },
+            { question: "What part of their body do dogs use to smell things?", correctAnswer: "nose", },
+            { question: "What is the tail of a dog used for?", correctAnswer: "wagging", },
+            { question: "What do you call a baby dog?", correctAnswer: "puppy", },
         ],
-        'Whale': [
-            "Where does a whale live?",
-            "What does a whale's body look like?",
-            "How does a whale swim?",
-            "What is a notable characteristic of whales?",
-            "How do whales breathe and communicate?"
+        'Cat': [
+            { question: "How many legs does a cat have?", correctAnswer: "four legs", },
+            { question: "What do cats use their whiskers for?", correctAnswer: " to feel things.", },
+            { question: "What part of their body do cats use for purring?", correctAnswer: " their throat", },
+            { question: "What do you call a baby cat?", correctAnswer: " a kitten", },
+        ],
+        'Elephant': [
+            { question: "How many legs does an elephant have?", correctAnswer: "four legs", },
+            { question: "What do elephants use their trunk for?", correctAnswer: " smelling breathing picking up things", },
+            { question: "What do elephants have on their tusks?", correctAnswer: " ivory", },
+            { question: "What do you call a baby elephant?", correctAnswer: "a calf", },
+        ],
+        'Parrot': [
+            { question: "What do parrots use their beak for?", correctAnswer: "eating cracking open nuts or seeds", },
+            { question: "What do some parrots learn to do like humans?", correctAnswer: "talk like humans", },
+            { question: "What do parrots use their wings for?", correctAnswer: "for flying", },
+            { question: "What do you call a group of parrots?", correctAnswer: "a flock", },
         ],
         'Horse': [
-            "What sound does a horse make?",
-            "What is the horse's mane?",
-            "How many legs does a horse have?",
-            "What do horses use to walk?",
-            "What do you call a baby horse?"
+            { question: "What is the horse's mane?", correctAnswer: "hair on its neck", },
+            { question: "How many legs does a horse have?", correctAnswer: "four legs", },
+            { question: "What do horses use to walk?", correctAnswer: "to walk", },
+            { question: "What do you call a baby horse?", correctAnswer: "a foal", },
         ],
-        'Rabbit': [
-            "What sound does a rabbit make?",
-            "How many ears does a rabbit have?",
-            "What do rabbits use to move around?",
-            "What covers the body of a rabbit?",
-            "What do you call a group of rabbits?"
+        'Chicken(Rooster)': [
+            { question: "What do chickens use their wings for?", correctAnswer: "for flying", },
+            { question: "What do chickens scratch the ground with?", correctAnswer: "with their claws", },
+            { question: "What colors can chickens be?", correctAnswer: "Ch white, brown, or black", },
+            { question: "What do chickens lay?", correctAnswer: "eggs", },
         ],
-        // Add more categories and their corresponding questions as needed
+        'Snake': [
+            { question: "What do snakes use their tongue for?", correctAnswer: "to smell", },
+            { question: "Do snakes have legs?", correctAnswer: "No", },
+            { question: "What do some snakes inject with their fangs?", correctAnswer: "venom", },
+            { question: "How do snakes warn others when they feel threatened?", correctAnswer: "hiss", },
+        ],
+        'Frog ': [
+            { question: "Where do frogs live?", correctAnswer: "near water", },
+            { question: "How do frogs move?", correctAnswer: "by jumping", },
+            { question: "What colors can frogs be?", correctAnswer: "green brown or gray", },
+            { question: "What do frogs use their front legs for?", correctAnswer: "for gripping", },
+        ],
+        'Cow': [
+            { question: "What do cows eat?", correctAnswer: "grass hay", },
+            { question: "How many legs does a cow have?", correctAnswer: "four legs", },
+            { question: "What do cows use their tail for?", correctAnswer: "swat flies", },
+            { question: "What colors can cows be?", correctAnswer: "black brown or white", },
+        ],
     };
 
     const lessons = lessonsData[selectedCategory];
@@ -125,7 +171,7 @@ const BlindLessonScreen = ({ route }) => {
 
     const handleQuizButtonPress = () => {
         setShowQuiz(true);
-        speakQuestion(questions[currentQuestionIndex]);
+        speakQuestion(questions[currentQuestionIndex].question);
     };
 
     const [recording, setRecording] = useState();
@@ -141,7 +187,7 @@ const BlindLessonScreen = ({ route }) => {
     }, []);
 
     const startRecording = async () => {
-        if (isRecording) return; // Prevent starting a new recording if one is already active
+        if (isRecording) return;
         try {
             console.log('Requesting permissions..');
             await Audio.requestPermissionsAsync();
@@ -221,7 +267,7 @@ const BlindLessonScreen = ({ route }) => {
             }
 
             const result = await response.text();
-            console.log(result); 
+            console.log(result);
         } catch (error) {
             console.error('Error:', error.message);
         }
@@ -231,28 +277,23 @@ const BlindLessonScreen = ({ route }) => {
 
     const sendAudioToSpeechToText = async () => {
         try {
-            // Check if recording is available
             if (!recording || !recording.getURI) {
                 console.error('Recording is not available or does not have a valid URI');
                 return;
             }
 
-            // Get the URI of the recorded audio
             const uri = recording.getURI();
 
-            // Check if URI is available
             if (!uri) {
                 console.error('Recording URI is not available');
                 return;
             }
 
-            // Read the audio file as base64
             const base64Audio = await FileSystem.readAsStringAsync(uri, {
                 encoding: FileSystem.EncodingType.Base64,
             });
             console.log('Base64 Audio:', base64Audio);
 
-            // Send the base64 audio to the Cloud Function
             await sendAudioToCloudFunction(base64Audio);
 
             const response = await fetch(
@@ -278,12 +319,10 @@ const BlindLessonScreen = ({ route }) => {
 
             console.log('API Response:', response);
 
-            // Parse the response
             const data = await response.json();
 
             console.log('Transcription Data:', data);
 
-            // Extract the transcript from the response
             const transcript = data.results[0]?.alternatives[0]?.transcript;
 
 
@@ -292,17 +331,28 @@ const BlindLessonScreen = ({ route }) => {
                 return;
             }
 
-            // Update state with the transcript
-            const updatedResponses = [...responses, transcript];
-            setResponses(updatedResponses);
+            setTranscription(transcript);
 
-            if (currentQuestionIndex < questions.length - 1) {
-                setCurrentQuestionIndex(currentQuestionIndex + 1);
-                speakQuestion(questions[currentQuestionIndex + 1]);
+            if (questions[currentQuestionIndex]) {
+                const userAnswer = transcript.toLowerCase();
+                const correctAnswer = questions[currentQuestionIndex].correctAnswer.toLowerCase();
+
+                const isCorrect = userAnswer === correctAnswer;
+
+                const updatedResponses = [...responses, { question: questions[currentQuestionIndex].question, userAnswer, correctAnswer, isCorrect }];
+                setResponses(updatedResponses);
+
+                if (currentQuestionIndex < questions.length - 1) {
+                    setCurrentQuestionIndex(currentQuestionIndex + 1);
+                    speakQuestion(questions[currentQuestionIndex + 1].question);
+                } else {
+                    setShowResponses(true);
+                    console.log('Data: ', updatedResponses);
+                }
             } else {
-                setShowResponses(true);
-                console.log('Data: ', updatedResponses);
+                console.error('No question found at index', currentQuestionIndex);
             }
+
         } catch (error) {
             console.error('Error:', error);
         }
@@ -328,7 +378,7 @@ const BlindLessonScreen = ({ route }) => {
                 <View style={styles.quizContainer}>
                     <Text style={styles.quizHeader}>Quiz Questions</Text>
                     <View style={styles.questionContainer}>
-                        <Text style={styles.questionText}>{questions[currentQuestionIndex]}</Text>
+                        <Text style={styles.questionText}>{questions[currentQuestionIndex].question}</Text>
                         <TouchableOpacity onPressIn={startRecording} onPressOut={stopRecording}>
                             <Text style={{ fontSize: 24 }}>{isRecording ? 'Stop Recording' : 'Start Recording'}</Text>
                         </TouchableOpacity>
@@ -352,12 +402,13 @@ const BlindLessonScreen = ({ route }) => {
                     <FlatList
                         data={responses}
                         renderItem={({ item, index }) => (
-                            <Text style={styles.responseItem}>{`Question ${index + 1}: ${item}`}</Text>
+                            <Text style={styles.responseItem}>{`Question ${index + 1}: ${item.question}\nYour Answer: ${item.userAnswer}\nCorrect Answer: ${item.correctAnswer}\nResult: ${item.isCorrect ? 'Correct' : 'Incorrect'}`}</Text>
                         )}
                         keyExtractor={(item, index) => index.toString()}
                     />
                 </View>
             )}
+
 
             <TouchableOpacity style={styles.submitBtn} onPress={sendAudioToSpeechToText}>
                 <Text style={styles.submitTxt}>Submit</Text>
