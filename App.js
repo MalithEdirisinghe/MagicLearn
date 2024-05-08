@@ -14,6 +14,8 @@ import BlindLessonScreen from './screens/BlindLessonScreen';
 import MuteHomeScreen from './screens/MuteHomeScreen';
 import LearnSignLanguageScreen from './screens/LearnSignLanguageScreen';
 import ASLScreen from './screens/ASLScreen';
+import MuteGifScreen from './screens/MuteGifScreen';
+import GifWordScreen from './screens/GifWordScreen';
 
 
 const Stack = createStackNavigator();
@@ -97,6 +99,18 @@ const App = () => {
         <Stack.Screen
           name="ASL"
           component={ASLScreen}
+          options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
+        />
+
+        <Stack.Screen
+          name="MuteGif"
+          component={MuteGifScreen}
+          options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
+        />
+
+        <Stack.Screen
+          name="GifWord"
+          component={GifWordScreen}
           options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
         />
       </Stack.Navigator>

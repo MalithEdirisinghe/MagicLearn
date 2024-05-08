@@ -1,24 +1,25 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
 const MuteHomeScreen = ({ navigation }) => {
     const handleButton1Press = () => {
-        navigation.navigate('LearnSign');
+        navigation.navigate('GifWord');
     };
 
     const handleButton2Press = () => {
-        navigation.navigate('MuteGif');
+        // navigation.navigate('BlindQuiz');
     };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.instructionText}>Learn for Deaf & Mute Kids</Text>
+            <Image style={styles.coverImg} source={require('../assets/mute.jpg')}></Image>
+            <Text style={styles.instructionText}>Let's learn sign language for words</Text>
             <Text style={styles.subText}>Please choose an option:</Text>
             <TouchableOpacity style={styles.button} onPress={handleButton1Press}>
-                <Text style={styles.buttonText}>Learn Sign Language</Text>
+                <Text style={styles.buttonText}>Capture the Answer</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={handleButton2Press}>
-                <Text style={styles.buttonText}>Lesson & Quiz</Text>
+                <Text style={styles.buttonText}>Math Question</Text>
             </TouchableOpacity>
         </View>
     );
@@ -27,13 +28,13 @@ const MuteHomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
     },
     instructionText: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
+        textAlign: 'center',
     },
     subText: {
         fontSize: 18,
@@ -49,6 +50,11 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         fontSize: 18,
+    },
+    coverImg: {
+        width: '100%',
+        height: '20%',
+        alignSelf: 'center',
     },
 });
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, Platform, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Platform, Alert, ActivityIndicator } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -38,6 +38,9 @@ const ASLScreen = ({ navigation, route }) => {
     const [quizStarted, setQuizStarted] = useState(false);
     const [cameraPermission, setCameraPermission] = useState(null);
     const [imageUri, setImageUri] = useState();
+    const [imageCaptured, setImageCaptured] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [responseDataArray, setResponseDataArray] = useState([]);
 
     useEffect(() => {
         const startCharCode = range.charCodeAt(0);
@@ -123,12 +126,80 @@ const ASLScreen = ({ navigation, route }) => {
 
         if (!result.canceled) {
             setImageUri(result.assets[0].uri);
-
+            setImageCaptured(true);
 
         } else {
             console.log('Image capture canceled');
         }
     };
+
+    const handleSubmitImage = async () => {
+        try {
+            setLoading(true);
+            const formData = new FormData();
+            formData.append('image', {
+                uri: imageUri,
+                name: 'image.jpg',
+                type: 'image/jpg',
+            });
+
+            const response = await fetch('http://13.50.16.208/asl/predict', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                if (responseData.prediction === "Cannont extract Sign from uploaded image, Try again") {
+                    Alert.alert('Prediction Error', responseData.prediction);
+                } else {
+                    console.log('Prediction result:', responseData);
+
+                    const updatedResponseDataArray = [...responseDataArray];
+                    updatedResponseDataArray.push(responseData);
+                    setResponseDataArray(updatedResponseDataArray);
+
+                    setCurrentLetterIndex(currentLetterIndex + 1);
+                    setImageUri(null);
+                    setImageCaptured(false);
+                }
+            } else {
+                throw new Error('Failed to send image for prediction');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Alert.alert('Error', 'Failed to submit image. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (currentLetterIndex === letters.length) {
+            setQuizStarted(false);
+            compareResponseData();
+        }
+    }, [currentLetterIndex]);
+
+    const compareResponseData = () => {
+        const resultArray = [];
+        responseDataArray.forEach((responseData, index) => {
+            const predictedLetter = responseData.prediction;
+            const actualLetter = letters[index];
+            if (predictedLetter === actualLetter) {
+                resultArray.push('Correct');
+            } else {
+                resultArray.push('Incorrect');
+            }
+        });
+        console.log('Result Array:', resultArray);
+    };
+
+
+
 
     return (
         <View style={styles.container}>
@@ -160,6 +231,15 @@ const ASLScreen = ({ navigation, route }) => {
                         )}
 
                     </View>
+                    {imageCaptured && (
+                        <TouchableOpacity style={styles.submitButton} onPress={handleSubmitImage}>
+                            {loading ? (
+                                <ActivityIndicator size="small" color="#ffffff" />
+                            ) : (
+                                <Text style={styles.buttonText}>Submit Image</Text>
+                            )}
+                        </TouchableOpacity>
+                    )}
                     <TouchableOpacity style={styles.captureButton} onPress={handleCaptureImage}>
                         <Text style={styles.buttonText}>{imageUri ? 'Retake Image' : 'Open Camera'}</Text>
                     </TouchableOpacity>
@@ -228,6 +308,14 @@ const styles = StyleSheet.create({
         width: '90%',
         height: '70%',
         alignSelf: 'center',
+    },
+    submitButton: {
+        bottom: '15%',
+        alignSelf: 'center',
+        backgroundColor: 'blue',
+        borderRadius: 50,
+        paddingVertical: 15,
+        paddingHorizontal: 30,
     },
 });
 

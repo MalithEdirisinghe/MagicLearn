@@ -5,7 +5,7 @@ const LessonCategoryScreen = ({ route, navigation }) => {
     const { category } = route.params;
 
     const categoriesData = {
-        'Animals': ['Dog', 'Whale', 'Horse', 'Rabbit'],
+        'Animals': ['Cat', 'Dog', 'Elephant', 'Parrot', 'Cow', 'Whale', 'Horse', 'Frog', 'Snake', 'Rabbit', 'Chicken(Rooster)'],
         'Human Body': ['Eyes', 'Ears', 'Nose', 'Mouth', 'Hands'],
         'Fruits/Vegetables': ['Apple', 'Banana', 'Carrot', 'Tomato', 'Cucumber'],
         'Transportation': ['Car', 'Bus', 'Bicycle', 'Train', 'Airplane']
