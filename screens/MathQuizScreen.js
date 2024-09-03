@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 
-const MuteHomeScreen = ({ navigation }) => {
+const MathQuizScreen = ({ navigation }) => {
     const [greeting, setGreeting] = useState('');
 
     useEffect(() => {
@@ -15,29 +15,31 @@ const MuteHomeScreen = ({ navigation }) => {
         }
     }, []);
 
-    const handleButton1Press = () => {
-        navigation.navigate('LearnSign');
-    };
-
-    const handleButton2Press = () => {
-        navigation.navigate('MuteGif');
-    };
-
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.instructionText}>Learn for Deaf & Mute Kids</Text>
-                <View style={styles.levelContainer}>
+            <Text style={styles.instructionText}>Ready, set, learn!</Text>
+            <View style={styles.levelContainer}>
+                <View style={styles.greetingContainer}>
                     <Text style={styles.goodMorningText}>{greeting}</Text>
-                    <View style={styles.profilePic} />
                 </View>
             </View>
             <Text style={styles.subText}>Choose your option!</Text>
-            <TouchableOpacity style={styles.button} onPress={handleButton1Press}>
-                <Text style={styles.buttonText}>Learn Sign Language</Text>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Addition', { operation: 'addition' })}>
+                <ImageBackground source={require('../assets/Addition.png')} style={styles.imageBackground}>
+                    <Text style={styles.buttonText}>ADDITION</Text>
+                </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={handleButton2Press}>
-                <Text style={styles.buttonText}>Lesson & Quiz</Text>
+
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Addition', { operation: 'subtraction' })}>
+                <ImageBackground source={require('../assets/Subtraction.png')} style={styles.imageBackground}>
+                    <Text style={styles.buttonText}>SUBTRACTION</Text>
+                </ImageBackground>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('TikTik')}>
+                <ImageBackground source={require('../assets/Tik.png')} style={styles.imageBackground}>
+                    <Text style={styles.buttonText}>Tik Tik Tik</Text>
+                </ImageBackground>
             </TouchableOpacity>
             <Text style={styles.guidelines}>Guidelines</Text>
         </View>
@@ -52,16 +54,11 @@ const styles = StyleSheet.create({
         paddingTop: 60,
         paddingHorizontal: 20,
     },
-    header: {
-        width: '100%',
-        marginBottom: 20,
-        alignItems: 'center',
-    },
     instructionText: {
         fontSize: 24,
         fontWeight: 'bold',
         color: '#000',
-        marginBottom: 10,
+        marginBottom: 20,
     },
     levelContainer: {
         width: '90%',
@@ -71,6 +68,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginBottom: 20,
+    },
+    greetingContainer: {
+        flexDirection: 'column',
     },
     goodMorningText: {
         fontSize: 16,
@@ -88,23 +89,24 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     button: {
-        backgroundColor: '#fff',
-        paddingVertical: 15,
-        paddingHorizontal: 25,
-        borderRadius: 10,
-        marginBottom: 15,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
-        elevation: 3,
         width: '90%',
+        height: 100,
+        borderRadius: 15,
+        marginBottom: 15,
+        overflow: 'hidden',
+    },
+    imageBackground: {
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
     },
     buttonText: {
-        color: '#000',
-        fontSize: 18,
+        color: '#fff',
+        fontSize: 24,
         fontWeight: 'bold',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
     },
     guidelines: {
         fontSize: 16,
@@ -113,4 +115,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default MuteHomeScreen;
+export default MathQuizScreen;

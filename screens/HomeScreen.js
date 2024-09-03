@@ -37,44 +37,44 @@ const HomeScreen = ({ navigation }) => {
     };
 
     const handleLogout = async () => {
-            try {
-                signOut(auth)
-                    .then(() => {
-                        navigation.navigate('Login');
-                    })
-                    .catch((error) => {
-                        console.error('Error logging out:', error);
-                    });
-            } catch (error) {
-                console.error('Error logging out:', error);
-            }
-        };
+        try {
+            signOut(auth)
+                .then(() => {
+                    navigation.navigate('Login');
+                })
+                .catch((error) => {
+                    console.error('Error logging out:', error);
+                });
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
+    };
 
-        const handleLogoutButtonPress = () => {
-            showLogoutAlert();
-        };
+    const handleLogoutButtonPress = () => {
+        showLogoutAlert();
+    };
 
-        const showLogoutAlert = () => {
-            Alert.alert(
-                'Logout',
-                'Are you sure you want to logout?',
-                [
-                    {
-                        text: 'No',
-                        style: 'cancel',
-                    },
-                    {
-                        text: 'Yes',
-                        onPress: handleLogout,
-                    },
-                ],
-                { cancelable: false }
-            );
-        };
+    const showLogoutAlert = () => {
+        Alert.alert(
+            'Logout',
+            'Are you sure you want to logout?',
+            [
+                {
+                    text: 'No',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Yes',
+                    onPress: handleLogout,
+                },
+            ],
+            { cancelable: false }
+        );
+    };
 
     return (
         <View style={styles.container}>
-            <Image style={styles.coverImg} source={images[imageIndex]}></Image>
+            <Image style={styles.coverImg} source={images[imageIndex]} />
             <Text style={styles.title}>Welcome to MagicLearn!</Text>
             <TouchableOpacity style={styles.button} onPress={handleBlindButtonPress}>
                 <Text style={styles.buttonText}>Blind</Text>
@@ -92,39 +92,57 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        backgroundColor: '#E0E8F9',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        paddingTop: 60,
+        paddingHorizontal: 20,
+    },
+    coverImg: {
+        alignSelf: 'center',
+        width: '115%',
+        height: '25%',
+        borderWidth: 1,
+        bottom: '8%',
+        marginBottom: 20,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
+        color: '#000',
         marginBottom: 20,
     },
     button: {
-        backgroundColor: '#4D86F7',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 8,
+        backgroundColor: '#fff',
+        paddingVertical: 15,
+        paddingHorizontal: 25,
+        borderRadius: 10,
         marginBottom: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 3,
+        width: '90%',
+        alignItems: 'center',
     },
     logoutButton: {
         backgroundColor: 'red',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 8,
+        paddingVertical: 15,
+        paddingHorizontal: 25,
+        borderRadius: 10,
         marginBottom: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 3,
+        width: '90%',
+        alignItems: 'center',
     },
     buttonText: {
-        color: '#fff',
+        color: '#000',
         fontSize: 18,
-    },
-    coverImg: {
-        alignSelf: 'center',
-        width: '100%',
-        height: '25%',
-        borderWidth: 1,
-        bottom: '22.5%'
+        fontWeight: 'bold',
     },
 });
 
