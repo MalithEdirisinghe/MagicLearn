@@ -36,7 +36,7 @@ const MathQuizScreen = ({ navigation }) => {
                 </ImageBackground>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('TikTik')}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Addition', { operation: 'Tik' })}>
                 <ImageBackground source={require('../assets/Tik.png')} style={styles.imageBackground}>
                     <Text style={styles.buttonText}>Tik Tik Tik</Text>
                 </ImageBackground>

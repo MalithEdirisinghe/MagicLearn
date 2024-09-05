@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, Modal, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
+import AnalogClock from './AnalogClock';
 
 const MathOperationScreen = ({ route }) => {
     const { operation } = route.params;
@@ -15,12 +16,13 @@ const MathOperationScreen = ({ route }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [correctAnswers, setCorrectAnswers] = useState(0);
     const [level, setLevel] = useState(1);
-
     const [chooseAnswerModalVisible, setChooseAnswerModalVisible] = useState(false);
     const [answerOptions, setAnswerOptions] = useState([]);
     const [correctAnswer, setCorrectAnswer] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [levelCompletedModalVisible, setLevelCompletedModalVisible] = useState(false);
+    const [randomHour, setRandomHour] = useState(0);
+    const [randomMinutes, setRandomMinutes] = useState(0);
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -32,7 +34,11 @@ const MathOperationScreen = ({ route }) => {
             setGreeting('Good Evening');
         }
 
-        generateQuestion();
+        if (operation !== 'Tik') {
+            generateQuestion();
+        } else {
+            generateRandomTime();
+        }
     }, []);
 
     const generateQuestion = () => {
@@ -57,10 +63,21 @@ const MathOperationScreen = ({ route }) => {
         setUserAnswer('');
     };
 
+    const generateRandomTime = () => {
+        const hour = Math.floor(Math.random() * 12) + 1; // Random hour between 1 and 12
+        const minutes = Math.floor(Math.random() * 12) * 5; // Random minutes between 0 and 55 (multiples of 5)
+
+        setRandomHour(hour);
+        setRandomMinutes(minutes);
+    };
 
     const getHint = () => {
-        const operationSign = operation === 'subtraction' ? '-' : '+';
-        setHint(`Hint: ${number1} ${operationSign} ${number2} = ?`);
+        if (operation === 'Tik') {
+            setHint('Check the clock!');
+        } else {
+            const operationSign = operation === 'subtraction' ? '-' : '+';
+            setHint(`Hint: ${number1} ${operationSign} ${number2} = ?`);
+        }
     };
 
     const toggleMode = () => {
@@ -83,25 +100,49 @@ const MathOperationScreen = ({ route }) => {
     };
 
     const handleChooseAnswerPress = () => {
-        const correct = operation === 'subtraction' ? number1 - number2 : number1 + number2;
-        setCorrectAnswer(correct);
+        let correct;
 
-        // Generate two wrong answers that are unique and different from the correct answer
+        if (operation === 'Tik') {
+            // Format the correct time in HH:MM format
+            correct = `${randomHour}:${randomMinutes < 10 ? '0' : ''}${randomMinutes}`;
+        } else {
+            // For other operations like addition or subtraction
+            correct = operation === 'subtraction' ? number1 - number2 : number1 + number2;
+        }
+
+        // Set the correct answer in text mode or numerical mode
+        setCorrectAnswer(isTextMode && operation !== 'Tik' ? numberToText(correct) : correct);
+
         let wrongAnswers = new Set();
 
-        while (wrongAnswers.size < 2) {
-            let wrongAnswer = correct + (Math.floor(Math.random() * 10) - 5); // Generate wrong answer close to correct answer
-            if (wrongAnswer > 0 && wrongAnswer !== correct) { // Ensure it's a positive and unique wrong answer
-                wrongAnswers.add(wrongAnswer);
+        if (operation === 'Tik') {
+            // Generate two random incorrect times for the Tik screen
+            while (wrongAnswers.size < 2) {
+                let wrongHour = Math.floor(Math.random() * 12) + 1;  // Random hour between 1 and 12
+                let wrongMinutes = Math.floor(Math.random() * 12) * 5;  // Random minutes between 0 and 55 (multiples of 5)
+                let wrongTime = `${wrongHour}:${wrongMinutes < 10 ? '0' : ''}${wrongMinutes}`;
+                if (wrongTime !== correct) {
+                    wrongAnswers.add(wrongTime);
+                }
+            }
+        } else {
+            // For non-Tik operations, generate two wrong answers
+            while (wrongAnswers.size < 2) {
+                let wrongAnswer = correct + (Math.floor(Math.random() * 10) - 5);  // Generate wrong answer close to correct answer
+                if (wrongAnswer > 0 && wrongAnswer !== correct) {  // Ensure it's a positive and unique wrong answer
+                    wrongAnswers.add(isTextMode ? numberToText(wrongAnswer) : wrongAnswer); // Convert wrong answers to text if in text mode
+                }
             }
         }
 
-        const options = [correct, ...wrongAnswers];
-        const shuffledOptions = options.sort(() => Math.random() - 0.5);
+        // Combine the correct answer and wrong answers into one array
+        const options = [isTextMode && operation !== 'Tik' ? numberToText(correct) : correct, ...wrongAnswers];
+        const shuffledOptions = options.sort(() => Math.random() - 0.5);  // Shuffle the options
 
+        // Set the shuffled options to state for rendering in the modal
         setAnswerOptions(shuffledOptions);
         setSelectedAnswer(null);  // Reset the selected answer
-        setChooseAnswerModalVisible(true);
+        setChooseAnswerModalVisible(true);  // Open the modal
     };
 
     const handleAnswerSelection = (selectedAnswer) => {
@@ -121,7 +162,11 @@ const MathOperationScreen = ({ route }) => {
                 setCorrectAnswers(0);
                 setLevelCompletedModalVisible(true);  // Show level completed modal
             }
-            generateQuestion();
+            if (operation === 'Tik') {
+                generateRandomTime();  // Generate a new random time
+            } else {
+                generateQuestion();
+            }
         } else {
             Toast.show({
                 type: 'error',
@@ -142,8 +187,28 @@ const MathOperationScreen = ({ route }) => {
                 text1: 'Please enter the Answer',
             });
         } else {
-            const correctAnswer = operation === 'subtraction' ? number1 - number2 : number1 + number2;
-            if (parseInt(userAnswer) === correctAnswer) {
+            let correctAnswer;
+
+            if (operation === 'Tik') {
+                correctAnswer = `${randomHour}:${randomMinutes < 10 ? '0' : ''}${randomMinutes}`;  // Correct time in HH:MM format
+            } else {
+                correctAnswer = operation === 'subtraction' ? number1 - number2 : number1 + number2;
+            }
+
+            if (operation === 'Tik' && userAnswer.trim() === correctAnswer) {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Correct!',
+                });
+                setCorrectAnswers(correctAnswers + 1);
+                if (correctAnswers + 1 === 10) {
+                    setLevel(level + 1);
+                    setCorrectAnswers(0);
+                    setLevelCompletedModalVisible(true);  // Show level completed modal
+                }
+                handleCloseModal();
+                generateRandomTime();  // Generate a new random time
+            } else if (parseInt(userAnswer) === correctAnswer) {
                 Toast.show({
                     type: 'success',
                     text1: 'Correct!',
@@ -182,21 +247,43 @@ const MathOperationScreen = ({ route }) => {
                 </View>
             </View>
             <View style={styles.questionContainer}>
-                <TouchableOpacity style={styles.toggleModeButton} onPress={toggleMode}>
-                    <Icon name={isTextMode ? "font" : "hashtag"} size={24} color="#FFF" />
-                </TouchableOpacity>
+                {operation !== 'Tik' && (
+                    <TouchableOpacity style={styles.toggleModeButton} onPress={toggleMode}>
+                        <Icon name={isTextMode ? "font" : "hashtag"} size={24} color="#FFF" />
+                    </TouchableOpacity>
+                )}
                 <Text style={styles.additionText}>{operation.toUpperCase()}</Text>
-                <TouchableOpacity style={styles.skipButton} onPress={generateQuestion}>
-                    <Text style={styles.skipText}>Skip</Text>
-                </TouchableOpacity>
-                <Text style={styles.questionText}>
-                    {isTextMode ? `${numberToText(number1)} ${operation === 'subtraction' ? '-' : '+'} ${numberToText(number2)}` : `${number1} ${operation === 'subtraction' ? '-' : '+'} ${number2}`}
-                </Text>
+                {operation === 'Tik' ? (
+                    <View style={styles.clockContainer}>
+                        <AnalogClock
+                            size={120}
+                            colorClock="#fff"
+                            colorNumber="#000"
+                            colorCenter="#000"
+                            hour={randomHour} // Use randomly generated hour
+                            minutes={randomMinutes} // Use randomly generated minutes
+                        />
+                        {/* Add Skip button for Tik screen */}
+                        <TouchableOpacity style={styles.skipButtonTik} onPress={generateRandomTime}>
+                            <Text style={styles.skipText}>Skip</Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : (
+                    <>
+                        <TouchableOpacity style={styles.skipButton} onPress={generateQuestion}>
+                            <Text style={styles.skipText}>Skip</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.questionText}>
+                            {isTextMode ? `${numberToText(number1)} ${operation === 'subtraction' ? '-' : '+'} ${numberToText(number2)}` : `${number1} ${operation === 'subtraction' ? '-' : '+'} ${number2}`}
+                        </Text>
+                    </>
+                )}
                 <TouchableOpacity style={styles.hintButton} onPress={getHint}>
                     <Text style={styles.hintText}>GET A HINT</Text>
                 </TouchableOpacity>
                 {hint !== '' && <Text style={styles.hintDisplay}>{hint}</Text>}
             </View>
+
             <View style={styles.answerOptionsContainer}>
                 <Text style={styles.answerOptionsTitle}>ANSWER OPTIONS</Text>
                 <TouchableOpacity style={styles.seeAllButton}>
@@ -219,6 +306,39 @@ const MathOperationScreen = ({ route }) => {
                 </TouchableOpacity>
             </View>
 
+            {/* Modal for typing the answer */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={handleCloseModal}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalQuestionText}>
+                            {operation === 'Tik'
+                                ? 'Enter the Time'
+                                : (isTextMode
+                                    ? `${numberToText(number1)} ${operation === 'subtraction' ? '-' : '+'} ${numberToText(number2)}`
+                                    : `${number1} ${operation === 'subtraction' ? '-' : '+'} ${number2}`)}
+                        </Text>
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder={operation === 'Tik' ? 'HH:MM' : 'Type your answer'}
+                            value={userAnswer}
+                            onChangeText={setUserAnswer}
+                            keyboardType={operation === 'Tik' ? 'default' : 'numeric'}  // Use default for time input
+                        />
+                        <TouchableOpacity style={styles.submitButton} onPress={handleSubmitAnswer}>
+                            <Text style={styles.submitButtonText}>Submit</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.closeButton} onPress={handleCloseModal}>
+                            <Text style={styles.closeButtonText}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
             {/* Modal for "Choose the answer" */}
             <Modal
                 animationType="slide"
@@ -229,7 +349,11 @@ const MathOperationScreen = ({ route }) => {
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
                         <Text style={styles.modalQuestionText}>
-                            {isTextMode ? `${numberToText(number1)} ${operation === 'subtraction' ? '-' : '+'} ${numberToText(number2)}` : `${number1} ${operation === 'subtraction' ? '-' : '+'} ${number2}`}
+                            {operation === 'Tik'
+                                ? 'Select the Time'  // Show 'Select the Time' for Tik operation
+                                : (isTextMode
+                                    ? `${numberToText(number1)} ${operation === 'subtraction' ? '-' : '+'} ${numberToText(number2)}`
+                                    : `${number1} ${operation === 'subtraction' ? '-' : '+'} ${number2}`)}
                         </Text>
                         {answerOptions.map((option, index) => (
                             <TouchableOpacity
@@ -244,7 +368,7 @@ const MathOperationScreen = ({ route }) => {
                                     styles.modalAnswerText,
                                     selectedAnswer === option && styles.selectedAnswerText
                                 ]}>
-                                    {isTextMode ? numberToText(option) : option}
+                                    {option} {/* Show the answer option */}
                                 </Text>
                             </TouchableOpacity>
                         ))}
@@ -252,35 +376,6 @@ const MathOperationScreen = ({ route }) => {
                             <Text style={styles.submitButtonText}>Submit Answer</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.closeButton} onPress={() => setChooseAnswerModalVisible(false)}>
-                            <Text style={styles.closeButtonText}>Close</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
-
-            {/* Modal for typing the answer */}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={handleCloseModal}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalQuestionText}>
-                            {isTextMode ? `${numberToText(number1)} ${operation === 'subtraction' ? '-' : '+'} ${numberToText(number2)}` : `${number1} ${operation === 'subtraction' ? '-' : '+'} ${number2}`}
-                        </Text>
-                        <TextInput
-                            style={styles.textInput}
-                            placeholder="Type your answer"
-                            value={userAnswer}
-                            onChangeText={setUserAnswer}
-                            keyboardType="numeric"
-                        />
-                        <TouchableOpacity style={styles.submitButton} onPress={handleSubmitAnswer}>
-                            <Text style={styles.submitButtonText}>Submit</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.closeButton} onPress={handleCloseModal}>
                             <Text style={styles.closeButtonText}>Close</Text>
                         </TouchableOpacity>
                     </View>
@@ -375,9 +470,9 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         padding: 20,
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 10,
         position: 'relative',
-        top: '25%'
+        top: '18%'
     },
     toggleModeButton: {
         position: 'absolute',
@@ -406,9 +501,29 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    skipButtonTik: {
+        position: 'absolute',
+        width: 47,
+        height: 44,
+        left: '75%',
+        top: -10,
+        backgroundColor: '#FF9051',
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+        shadowColor: 'rgba(255, 161, 107, 0.6)',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 32,
+        borderRadius: 36,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     skipText: {
         fontSize: 14,
         color: '#FFF',
+    },
+    clockContainer: {
+        marginTop: 20,
     },
     questionText: {
         fontSize: 24,
@@ -490,6 +605,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginTop: 10,
         fontSize: 18,
+        textAlign: 'center'
     },
     modalContainer: {
         flex: 1,

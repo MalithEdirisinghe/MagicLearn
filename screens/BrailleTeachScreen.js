@@ -1,24 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import * as Speech from 'expo-speech';
 
+const BrailleTeachScreen = ({ navigation }) => {
 
-const BrailleTeachScreen = ({ navigation }) =>{
+    useEffect(() => {
+        // Speech text to be read aloud
+        const instructions = "Welcome to the Braille Learning App. This app will help you learn Braille step by step. Braille letters are made up of six dots. The top left dot is number 1, middle left is 2, bottom left is 3, top right is 4, middle right is 5, and bottom right is number 6.";
+
+        // Initiate the speech
+        Speech.speak(instructions);
+    }, []);
 
     const handleStartBtn = () => {
         navigation.navigate('Menu');
     }
 
-    return(
+    return (
         <View style={styles.container}>
             <Text style={styles.topicText}>Braille Teaching</Text>
-            <Image style={styles.topImg} source={require('../assets/desktop.png')}></Image>
+            <Image style={styles.topImg} source={require('../assets/desktop.png')} />
             <Text style={styles.textInstr}>Instructions</Text>
             <View style={styles.blueBox}>
-            <Text style={styles.instructText}>1. Braille is a tactile writing system used by people who are visually impaired. {'\n'} {'\n'}
-                2. Each Braille character or symbol consists of six dots arranged in two columns of three dots each. {'\n'}  {'\n'}
-                3. There are 64 possible combinations of these six dots, giving Braille the ability to represent a vast array of symbols and characters.{'\n'} {'\n'}
-            4. Braille readers typically read with their fingertips, feeling the raised dots on paper or using electronic devices.
-            </Text>
+                <Text style={styles.instructText}>
+                    "Welcome to the Braille Learning App. This app will help you learn Braille step by step. Braille letters are made up of six dots. The top left dot is number 1, middle left is 2, bottom left is 3, top right is 4, middle right is 5, and bottom right is number 6."
+                </Text>
             </View>
             <TouchableOpacity style={styles.startBtn} onPress={handleStartBtn}>
                 <Text style={styles.startText}>START</Text>
@@ -48,25 +54,26 @@ const styles = StyleSheet.create({
         height: '25%',
     },
     blueBox: {
-            top: '15%',
-            backgroundColor: '#ADD8E6',
-            alignSelf: 'center',
-            height: '35%',
-            width: '95%',
-            borderRadius: 20
+        top: '15%',
+        backgroundColor: '#ADD8E6',
+        alignSelf: 'center',
+        height: '35%',
+        width: '95%',
+        borderRadius: 20,
+        padding: 20, // Add padding inside the box for more space
     },
     textInstr: {
         top: '15%',
         left: '5%',
-        fontSize: 25,
+        fontSize: 22, // Adjusted for better readability
         fontStyle: 'italic',
         color: '#7C7878'
     },
     instructText: {
-        top: '5%',
         textAlign: 'justify',
-        marginTop: 10,
-        paddingHorizontal: 20, 
+        fontSize: 18, // Adjusted font size
+        color: '#000',
+        marginTop: 20,
     },
     startBtn: {
         top: '20%',
