@@ -19,7 +19,11 @@ import MuteGifScreen from './screens/MuteGifScreen';
 import GifWordScreen from './screens/GifWordScreen';
 import MathQuizScreen from './screens/MathQuizScreen';
 import AdditionScreen from './screens/AdditionScreen';
-import TikTikScreen from './screens/TikTikScreen';
+import VoiceLearnLevel from './screens/VoiceLearnLevel';
+import VoiceLearnHome from './screens/VoiceLearnHome';
+import QuizBrailleLetter from './screens/QuizBrailleLetter';
+import LessonCategory from './screens/LessonCategory';
+import ListenLesson from './screens/ListenLesson';
 import Toast from 'react-native-toast-message';
 
 const Stack = createStackNavigator();
@@ -68,13 +72,38 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="GifWord"
+          component={GifWordScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="Addition"
           component={AdditionScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="TikTik"
-          component={TikTikScreen}
+          name="VoiceLearnLevel"
+          component={VoiceLearnLevel}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="VoiceLearnHome"
+          component={VoiceLearnHome}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Quiz"
+          component={QuizBrailleLetter}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LessonCategory"
+          component={LessonCategory}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ListenLesson"
+          component={ListenLesson}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -117,11 +146,11 @@ const App = () => {
           component={MuteGifScreen}
           options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="GifWord"
           component={GifWordScreen}
           options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
-        />
+        /> */}
       </Stack.Navigator>
       <ToastContainer />
     </NavigationContainer>

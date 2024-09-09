@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Image, StyleSheet, TouchableOpacity, Text, Alert, Button, ActivityIndicator } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity, Text, Alert, Button, ActivityIndicator, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Modal from 'react-native-modal';
 
@@ -62,7 +62,7 @@ const GifWordScreen = () => {
                 type: 'image/jpg',
             });
 
-            const response = await fetch('http://13.50.16.208/extractedText/predict', {
+            const response = await fetch('http://13.60.250.75/sign/word/predict', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -75,7 +75,7 @@ const GifWordScreen = () => {
                 console.log('Response:', responseData);
 
                 const currentGifName = gifData[currentGifIndex].name.toUpperCase();
-                const apiResponse = responseData.extracted_text[0].toUpperCase();
+                const apiResponse = responseData.predicted_class.toUpperCase();  // Access the correct key
 
                 if (currentGifName === apiResponse) {
                     setShowAlert(true);
@@ -93,121 +93,219 @@ const GifWordScreen = () => {
         }
     };
 
-
-    const handleCloseModal = () => {
-        setShowAlert(false);
-        handleRetake();
+    // Handle skipping to the next question
+    const handleSkip = () => {
+        setImageUri(null);
+        setImageCaptured(false);
         setCurrentGifIndex((currentGifIndex + 1) % gifData.length);
     };
 
+    const handleCloseModal = () => {
+        setShowAlert(false);
+        handleSkip(); // Move to the next question after showing correct answer
+    };
 
     return (
-        <View style={styles.container}>
-            <Image
-                source={imageUri ? { uri: imageUri } : gifData[currentGifIndex].path}
-                style={imageUri ? styles.capturedImage : styles.gifImage}
-            />
-
-            {!imageCaptured && (
-                <>
-                    <TouchableOpacity style={styles.button} onPress={openCamera}>
-                        <Text style={styles.buttonText}>Open Camera</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.instructTxt}>INSTRUCTIONS:</Text>
-                    <View style={styles.instructStyle}>
-                        <Text style={styles.instructions}>
-                            1. Watch GIF: Observe the sign language GIF to understand the word.{'\n\n'}
-                            2. Write Word: Write the corresponding English word on paper, clearly and legibly.{'\n\n'}
-                            3. Take Photo: Use your camera to capture a clear image of the written word.{'\n\n'}
-                            4. Upload Photo: Click "Upload" and select the photo to submit it.{'\n\n'}
-                            5. Receive Feedback: The app uses OCR to check {'\n'}your answer and provides feedback on correctness.
-                        </Text>
-
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.container}>
+                {/* Progress bar */}
+                <View style={styles.progressBarContainer}>
+                    <Text style={styles.questionText}>Question {currentGifIndex + 1}</Text>
+                    <View style={styles.progressBar}>
+                        <View style={[styles.progress, { width: `${((currentGifIndex + 1) / gifData.length) * 100}%` }]}></View>
                     </View>
-                </>
-            )}
-
-            {imageCaptured && (
-                <TouchableOpacity style={styles.button} onPress={handleRetake}>
-                    <Text style={styles.buttonText}>Retake</Text>
-                </TouchableOpacity>
-            )}
-
-            {imageUri && (
-                <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
-                    {loading ? (
-                        <ActivityIndicator size="small" color="#ffffff" />
-                    ) : (
-                        <Text style={styles.buttonText}>Submit Image</Text>
-                    )}
-                </TouchableOpacity>
-            )}
-
-            <Modal isVisible={showAlert}>
-                <View style={styles.alertContainer}>
-                    <Image source={require('../assets/correct.png')} style={styles.alertImage} />
-                    <Text>Your answer is correct!</Text>
-                    <Button title="OK" onPress={handleCloseModal} />
                 </View>
-            </Modal>
-        </View>
+
+                {/* GIF/Sign Image */}
+                <View style={styles.signContainer}>
+                    <Text style={styles.signLabel}>Write the Correct word</Text>
+                    <Image
+                        source={imageUri ? { uri: imageUri } : gifData[currentGifIndex].path}
+                        style={imageUri ? styles.capturedImage : styles.gifImage}
+                    />
+                </View>
+
+                {!imageCaptured && (
+                    <>
+                        {/* Instructions */}
+                        <View style={styles.instructionsContainer}>
+                            <Text style={styles.instructionsTitle}>Instructions</Text>
+                            <Text style={styles.instructions}>
+                                1. Watch GIF: Observe the sign language GIF to understand the word.{'\n\n'}
+                                2. Write Word: Write the corresponding English word on paper, clearly and legibly.{'\n\n'}
+                                3. Take Photo: Use your camera to capture a clear image of the written word.{'\n\n'}
+                                4. Upload Photo: Click "Capture" and upload the photo to submit.{'\n\n'}
+                                5. Receive Feedback: The app will check your answer and provide feedback on correctness.
+                            </Text>
+                        </View>
+
+                        {/* Capture Button */}
+                        <TouchableOpacity style={styles.captureButton} onPress={openCamera}>
+                            <Text style={styles.captureButtonText}>Capture</Text>
+                        </TouchableOpacity>
+
+                        {/* Skip Button */}
+                        <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
+                            <Text style={styles.skipButtonText}>Skip</Text>
+                        </TouchableOpacity>
+                    </>
+                )}
+
+                {imageCaptured && (
+                    <>
+                        <TouchableOpacity style={styles.retakeButton} onPress={handleRetake}>
+                            <Text style={styles.captureButtonText}>Retake</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
+                            {loading ? (
+                                <ActivityIndicator size="small" color="#ffffff" />
+                            ) : (
+                                <Text style={styles.captureButtonText}>Submit Image</Text>
+                            )}
+                        </TouchableOpacity>
+                    </>
+                )}
+
+                {/* Success Modal */}
+                <Modal isVisible={showAlert}>
+                    <View style={styles.alertContainer}>
+                        <Image source={require('../assets/correct.png')} style={styles.alertImage} />
+                        <Text>Your answer is correct!</Text>
+                        <Button title="OK" onPress={handleCloseModal} />
+                    </View>
+                </Modal>
+            </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        padding: 10,
+        backgroundColor: '#EFEAFF',
+    },
     container: {
-        flex: 1,
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: '#EFEAFF',
+        padding: 20,
+    },
+    progressBarContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+        width: '100%',
+    },
+    questionText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+        flex: 1,
+    },
+    progressBar: {
+        flex: 2,
+        height: 8,
+        backgroundColor: '#D3D3D3',
+        borderRadius: 5,
+        marginLeft: 10,
+    },
+    progress: {
+        height: '100%',
+        backgroundColor: '#FF7F50',
+        borderRadius: 5,
+    },
+    signContainer: {
+        backgroundColor: '#745DB6',
+        borderRadius: 15,
+        padding: 20,
+        marginBottom: 20,
+        width: '100%',
+    },
+    signLabel: {
+        fontSize: 18,
+        color: '#FFF',
+        marginBottom: 10,
+        textAlign: 'center',
     },
     gifImage: {
-        width: 250,
-        height: 260,
-        marginBottom: 20,
-        top: '5%'
+        width: '100%',
+        height: 200,
+        resizeMode: 'contain',
     },
     capturedImage: {
-        width: '90%',
-        height: '25%',
+        width: '100%',
+        height: 200,
+        resizeMode: 'contain',
+    },
+    instructionsContainer: {
+        backgroundColor: '#FFF',
+        borderRadius: 15,
+        padding: 20,
         marginBottom: 20,
-        top: '5%'
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 5,
+        width: '100%',
     },
-    button: {
-        backgroundColor: '#4D86F7',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 8,
-        top: '5%'
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
-    },
-    submitBtn: {
-        backgroundColor: 'green',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 8,
-        top: '10%'
-    },
-    instructTxt: {
-        top: '10%',
-        alignSelf: 'flex-start',
-        left: '5%',
-        fontSize: 20,
-        fontWeight: '500',
-    },
-    instructStyle: {
-        top: '10%',
-        backgroundColor: '#ADD8E6',
-        alignSelf: 'center',
-        height: '35%',
-        width: '95%',
-        borderRadius: 20,
+    instructionsTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        color: '#000',
     },
     instructions: {
-        left: '3%',
-        fontWeight: '500',
+        fontSize: 16,
+        color: '#333',
+    },
+    captureButton: {
+        backgroundColor: '#B692F6',
+        borderRadius: 10,
+        paddingVertical: 12,
+        paddingHorizontal: 40,
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginTop: 20,
+    },
+    captureButtonText: {
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    retakeButton: {
+        backgroundColor: '#FF7F50',
+        borderRadius: 10,
+        paddingVertical: 12,
+        paddingHorizontal: 40,
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginTop: 20,
+    },
+    submitBtn: {
+        backgroundColor: '#4CAF50',
+        paddingVertical: 12,
+        paddingHorizontal: 40,
+        borderRadius: 8,
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginTop: 20,
+    },
+    skipButton: {
+        backgroundColor: '#FFBF00',
+        borderRadius: 10,
+        paddingVertical: 12,
+        paddingHorizontal: 40,
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginTop: 20,
+    },
+    skipButtonText: {
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
     alertContainer: {
         backgroundColor: '#fff',
