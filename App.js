@@ -24,6 +24,11 @@ import VoiceLearnHome from './screens/VoiceLearnHome';
 import QuizBrailleLetter from './screens/QuizBrailleLetter';
 import LessonCategory from './screens/LessonCategory';
 import ListenLesson from './screens/ListenLesson';
+import CaptureLearn from './screens/CaptureLearn';
+import ScanLessonScreen from './screens/ScanLessonScreen';
+import DisplayImageScreen from './screens/DisplayImageScreen';
+import QuizScreen from './screens/QuizScreen';
+import SignWordScreen from './screens/SignWordScreen';
 import Toast from 'react-native-toast-message';
 
 const Stack = createStackNavigator();
@@ -106,6 +111,27 @@ const App = () => {
           component={ListenLesson}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="CaptureLearn"
+          component={CaptureLearn}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DisplayImageScreen"
+          component={DisplayImageScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SignWordScreen"
+          component={SignWordScreen}
+          options={{ headerShown: true, headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
+        />
+        <Stack.Screen
+          name="ScanLessonScreen"
+          component={ScanLessonScreen}
+          options={{ title: 'Scan Lesson', headerShown: false }}
+        />
+        <Stack.Screen name="LessonQuiz" component={QuizScreen} />
         <Stack.Screen
           name="BlindHome"
           component={BlindHomeScreen}

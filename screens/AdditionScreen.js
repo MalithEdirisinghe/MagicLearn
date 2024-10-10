@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, Modal, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, Modal, Image, whiteBoardVisible } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
 import AnalogClock from './AnalogClock';
+import Signature from "react-native-signature-canvas";
+import {Base_url1} from './baseUrl'
 
 const MathOperationScreen = ({ route }) => {
     const { operation } = route.params;
@@ -23,6 +25,10 @@ const MathOperationScreen = ({ route }) => {
     const [levelCompletedModalVisible, setLevelCompletedModalVisible] = useState(false);
     const [randomHour, setRandomHour] = useState(0);
     const [randomMinutes, setRandomMinutes] = useState(0);
+    const [whiteBoardVisible, setWhiteBoardVisible] = useState(false); // Whiteboard Modal
+    const [signatureVisible, setSignatureVisible] = useState(false); // Signature Modal
+    const [signature, setSignature] = useState(""); // Store signature data
+    const [apiResponse, setApiResponse] = useState(""); // Store API response
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -180,6 +186,64 @@ const MathOperationScreen = ({ route }) => {
         setModalVisible(false);
     };
 
+    const handleWhiteBoardOpen = () => {
+        setWhiteBoardVisible(true); // Show the whiteboard modal
+    };
+
+    const handleWhiteBoardClose = () => {
+        setWhiteBoardVisible(false); // Hide the whiteboard modal
+    };
+
+    const handleSignatureSave = async (signatureDataUrl) => {
+        setSignature(signatureDataUrl); // Save the signature (sketch) data
+        setWhiteBoardVisible(false); // Hide the whiteboard modal
+
+        try {
+            // Create FormData object to send file
+            const formData = new FormData();
+            formData.append("image", {
+                uri: signatureDataUrl, // The 'signatureDataUrl' is a base64 URL
+                type: "image/jpg", // Set the appropriate MIME type
+                name: "signature.jpg", // Name of the file
+            });
+
+            // Send the FormData object to the API
+            const response = await fetch(Base_url1+":2990/mute/digit/predict", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data', // Ensure correct header for form data
+                },
+            });
+
+            // Handle the response
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+                const result = await response.json();
+                console.log('content', result);
+
+                // Provide detailed feedback based on API response
+                if (result.status === "error") {
+                    if (result.message.includes("confidence threshold")) {
+                        setApiResponse("The image submitted was unclear. Please try again with a clearer image.");
+                        // Optionally trigger a retry flow here
+                    } else {
+                        setApiResponse(result.message); // Display other error messages
+                    }
+                } else {
+                    setApiResponse(result.message); // Store success response
+                }
+            } else {
+                const text = await response.text();
+                setApiResponse("Unexpected response format from server");
+            }
+        } catch (error) {
+            console.error("Error sending signature to API:", error);
+            setApiResponse("Failed to send signature. Please check your connection or try again later.");
+        }
+    };
+
+
     const handleSubmitAnswer = () => {
         if (userAnswer.trim() === '') {
             Toast.show({
@@ -299,12 +363,17 @@ const MathOperationScreen = ({ route }) => {
                     <Text style={styles.answerOption}>Choose the answer</Text>
                     <Text style={styles.arrow}>›</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.answerButton}>
-                    <Icon name="pencil" size={24} color="#6A5AE0" style={styles.icon} />
-                    <Text style={styles.answerOption}>White Board</Text>
-                    <Text style={styles.arrow}>›</Text>
-                </TouchableOpacity>
+
+                {/* Conditionally render the whiteboard button if the operation is not "Tik" */}
+                {operation !== 'Tik' && (
+                    <TouchableOpacity style={styles.answerButton} onPress={handleWhiteBoardOpen}>
+                        <Icon name="pencil" size={24} color="#6A5AE0" style={styles.icon} />
+                        <Text style={styles.answerOption}>Whiteboard</Text>
+                        <Text style={styles.arrow}>›</Text>
+                    </TouchableOpacity>
+                )}
             </View>
+
 
             {/* Modal for typing the answer */}
             <Modal
@@ -336,6 +405,33 @@ const MathOperationScreen = ({ route }) => {
                             <Text style={styles.closeButtonText}>Close</Text>
                         </TouchableOpacity>
                     </View>
+                </View>
+            </Modal>
+
+            {/* Whiteboard Modal */}
+            <Modal visible={whiteBoardVisible} animationType="slide">
+                <View style={styles.modalContainer}>
+                    <Text style={styles.modalTitle}>Whiteboard</Text>
+                    <Signature
+                        onOK={handleSignatureSave}
+                        onEmpty={() => console.log("Signature is empty")}
+                        onClear={() => console.log("Signature cleared")}
+                        descriptionText="Sign here"
+                        clearText="Clear"
+                        confirmText="Submit"
+                        penColor="black"
+                        dotSize={5}
+                        minWidth={5}
+                        maxWidth={5}
+                        webStyle={`.m-signature-pad { box-shadow: none; border: none; } .m-signature-pad--body { border: 1px solid #000; }`}
+                    />
+
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={handleWhiteBoardClose}
+                    >
+                        <Text style={styles.buttonText}>Close</Text>
+                    </TouchableOpacity>
                 </View>
             </Modal>
 

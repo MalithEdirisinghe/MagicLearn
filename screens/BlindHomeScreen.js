@@ -7,8 +7,10 @@ const BlindHomeScreen = ({ navigation }) => {
     };
 
     const handleButton2Press = () => {
-        // navigation.navigate('BlindQuiz');
         navigation.navigate('VoiceLearnLevel');
+    };
+    const handleButton3Press = () => {
+        navigation.navigate('CaptureLearn');
     };
 
     return (
@@ -20,6 +22,9 @@ const BlindHomeScreen = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity style={styles.buttonSecondary} onPress={handleButton2Press}>
                 <Text style={styles.buttonText}>Lesson & Quiz</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleButton3Press}>
+                <Text style={styles.buttonText}>Capture & Learn</Text>
             </TouchableOpacity>
         </View>
     );

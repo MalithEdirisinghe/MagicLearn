@@ -41,6 +41,7 @@ const ASLScreen = ({ navigation, route }) => {
     const [imageCaptured, setImageCaptured] = useState(false);
     const [loading, setLoading] = useState(false);
     const [responseDataArray, setResponseDataArray] = useState([]);
+    const [feedback, setFeedback] = useState(''); // Feedback for correct or incorrect
 
     useEffect(() => {
         const startCharCode = range.charCodeAt(0);
@@ -90,6 +91,7 @@ const ASLScreen = ({ navigation, route }) => {
     }, [range]);
 
     const handleNextLetter = () => {
+        setFeedback(''); // Reset feedback when moving to the next question
         if (currentLetterIndex < letters.length - 1) {
             setCurrentLetterIndex(currentLetterIndex + 1);
         } else {
@@ -143,7 +145,7 @@ const ASLScreen = ({ navigation, route }) => {
                 type: 'image/jpg',
             });
 
-            const response = await fetch('http://13.50.16.208/asl/predict', {
+            const response = await fetch('http://13.60.250.75/sign/letter/predict', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -158,13 +160,22 @@ const ASLScreen = ({ navigation, route }) => {
                 } else {
                     console.log('Prediction result:', responseData);
 
-                    const updatedResponseDataArray = [...responseDataArray];
-                    updatedResponseDataArray.push(responseData);
-                    setResponseDataArray(updatedResponseDataArray);
+                    const predictedLetter = responseData.prediction;
+                    const actualLetter = letters[currentLetterIndex];
 
-                    setCurrentLetterIndex(currentLetterIndex + 1);
-                    setImageUri(null);
-                    setImageCaptured(false);
+                    // Provide feedback based on prediction
+                    if (predictedLetter === actualLetter) {
+                        Alert.alert('Correct!', 'Your prediction is correct.');
+                    } else {
+                        Alert.alert('Incorrect!', `You showed ${predictedLetter}. The correct letter is ${actualLetter}.`);
+                    }
+
+                    // Move to the next letter after some delay
+                    setTimeout(() => {
+                        setCurrentLetterIndex(currentLetterIndex + 1);
+                        setImageUri(null);
+                        setImageCaptured(false);
+                    }, 2000); // 2 seconds delay to show feedback
                 }
             } else {
                 throw new Error('Failed to send image for prediction');
@@ -176,29 +187,6 @@ const ASLScreen = ({ navigation, route }) => {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        if (currentLetterIndex === letters.length) {
-            setQuizStarted(false);
-            compareResponseData();
-        }
-    }, [currentLetterIndex]);
-
-    const compareResponseData = () => {
-        const resultArray = [];
-        responseDataArray.forEach((responseData, index) => {
-            const predictedLetter = responseData.prediction;
-            const actualLetter = letters[index];
-            if (predictedLetter === actualLetter) {
-                resultArray.push('Correct');
-            } else {
-                resultArray.push('Incorrect');
-            }
-        });
-        console.log('Result Array:', resultArray);
-    };
-
-
 
 
     return (

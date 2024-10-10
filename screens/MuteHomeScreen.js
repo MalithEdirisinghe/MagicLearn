@@ -22,6 +22,9 @@ const MuteHomeScreen = ({ navigation }) => {
     const handleButton2Press = () => {
         navigation.navigate('MuteGif');
     };
+    const handleButton3Press = () => {
+        navigation.navigate('SignWordScreen');
+    };
 
     return (
         <View style={styles.container}>
@@ -38,6 +41,9 @@ const MuteHomeScreen = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={handleButton2Press}>
                 <Text style={styles.buttonText}>Lesson & Quiz</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleButton3Press}>
+                <Text style={styles.buttonText}>Learn Sign Word</Text>
             </TouchableOpacity>
             <Text style={styles.guidelines}>Guidelines</Text>
         </View>

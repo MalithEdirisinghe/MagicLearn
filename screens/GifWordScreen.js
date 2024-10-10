@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Image, StyleSheet, TouchableOpacity, Text, Alert, Button, ActivityIndicator, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Modal from 'react-native-modal';
+import {Base_url2} from './baseUrl'
 
 const GifWordScreen = () => {
 
@@ -51,6 +52,9 @@ const GifWordScreen = () => {
         setImageUri(null);
         setImageCaptured(false);
     };
+    const handleNext = () => {
+        handleSkip();
+    };
 
     const handleSubmit = async () => {
         try {
@@ -62,7 +66,7 @@ const GifWordScreen = () => {
                 type: 'image/jpg',
             });
 
-            const response = await fetch('http://13.60.250.75/sign/word/predict', {
+            const response = await fetch(Base_url2 +'/deaf/extractedText', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -163,6 +167,9 @@ const GifWordScreen = () => {
                             ) : (
                                 <Text style={styles.captureButtonText}>Submit Image</Text>
                             )}
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.retakeButton} onPress={handleNext}>
+                            <Text style={styles.captureButtonText}>Next</Text>
                         </TouchableOpacity>
                     </>
                 )}

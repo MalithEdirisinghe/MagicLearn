@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 
 const VoiceLearnHome = ({ route, navigation }) => {
-    // Get the level from the route params
     const { level } = route.params;
-
-    // State to store the greeting message
     const [greeting, setGreeting] = useState('');
 
     useEffect(() => {
@@ -20,14 +17,82 @@ const VoiceLearnHome = ({ route, navigation }) => {
         }
     }, []);
 
-    const handleOptionPress = (option) => {
-        // Navigate to the corresponding screen based on the option
-        navigation.navigate(option);
+    const handleOptionPress = (option, category) => {
+        navigation.navigate(option, { category });
+    };
+
+    const renderOptions = () => {
+        if (level === 1) {
+            return (
+                <>
+                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'daily-routines')}>
+                        <Image source={require('../assets/daily-routines.png')} style={styles.optionImage} />
+                        <View style={styles.overlay} />
+                        <Text style={styles.optionText}>Daily Routines</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'animals')}>
+                        <Image source={require('../assets/Animals.png')} style={styles.optionImage} />
+                        <View style={styles.overlay} />
+                        <Text style={styles.optionText}>Animals</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'basic-hygiene')}>
+                        <Image source={require('../assets/basic-hygiene.png')} style={styles.optionImage} />
+                        <View style={styles.overlay} />
+                        <Text style={styles.optionText}>Basic Hygiene</Text>
+                    </TouchableOpacity>
+                </>
+            );
+        } else if (level === 2) {
+            return (
+                <>
+                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'vegetables-fruits')}>
+                        <Image source={require('../assets/Level 2/vegetables-fruits.jpg')} style={styles.optionImage} />
+                        <View style={styles.overlay} />
+                        <Text style={styles.optionText}>Vegetables and Fruits</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'patterns-sequences')}>
+                        <Image source={require('../assets/Level 2/patterns-sequences.jpg')} style={styles.optionImage} />
+                        <View style={styles.overlay} />
+                        <Text style={styles.optionText}>Patterns and Sequences</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'human-body')}>
+                        <Image source={require('../assets/Level 2/human-body.jpg')} style={styles.optionImage} />
+                        <View style={styles.overlay} />
+                        <Text style={styles.optionText}>Human Body</Text>
+                    </TouchableOpacity>
+                </>
+            );
+        } else if (level === 3) {
+            return (
+                <>
+                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'mathematics')}>
+                        <Image source={require('../assets/Level 3/mathematics.jpg')} style={styles.optionImage} />
+                        <View style={styles.overlay} />
+                        <Text style={styles.optionText}>Mathematics</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'time-and-days')}>
+                        <Image source={require('../assets/Level 3/time-days-week.jpg')} style={styles.optionImage} />
+                        <View style={styles.overlay} />
+                        <Text style={styles.optionText}>Time and Days of the Week</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'geography')}>
+                        <Image source={require('../assets/Level 3/geography.jpg')} style={styles.optionImage} />
+                        <View style={styles.overlay} />
+                        <Text style={styles.optionText}>Geography</Text>
+                    </TouchableOpacity>
+                </>
+            );
+        }
     };
 
     return (
         <View style={styles.container}>
-            {/* Header section */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image source={require('../assets/back-arrow.png')} style={styles.backArrow} />
@@ -35,7 +100,6 @@ const VoiceLearnHome = ({ route, navigation }) => {
                 <Text style={styles.headerText}>Ready, set, learn!</Text>
             </View>
 
-            {/* Level Card */}
             <View style={styles.levelCard}>
                 <View>
                     <Text style={styles.greetingText}>{greeting}</Text>
@@ -43,29 +107,11 @@ const VoiceLearnHome = ({ route, navigation }) => {
                 </View>
             </View>
 
-            {/* Options section */}
             <ScrollView style={styles.scrollContainer}>
                 <Text style={styles.chooseText}>Choose your option!</Text>
 
-                {/* Daily Routines */}
-                <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory')}>
-                    <Image source={require('../assets/daily-routines.png')} style={styles.optionImage} />
-                    <Text style={styles.optionText}>Daily Routines</Text>
-                </TouchableOpacity>
+                {renderOptions()}
 
-                {/* Animals */}
-                <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('Animals')}>
-                    <Image source={require('../assets/Animals.png')} style={styles.optionImage} />
-                    <Text style={styles.optionText}>Animals</Text>
-                </TouchableOpacity>
-
-                {/* Basic Hygiene */}
-                <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('BasicHygiene')}>
-                    <Image source={require('../assets/basic-hygiene.png')} style={styles.optionImage} />
-                    <Text style={styles.optionText}>Basic Hygiene</Text>
-                </TouchableOpacity>
-
-                {/* Guidelines */}
                 <Text style={styles.guidelinesText}>Guidelines</Text>
             </ScrollView>
         </View>
@@ -90,7 +136,7 @@ const styles = StyleSheet.create({
         color: '#333',
         alignSelf: 'center',
         top: '10%',
-        right: '150%'
+        right: '150%',
     },
     backArrow: {
         width: 24,
@@ -104,7 +150,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 50,
-        top: '10%'
+        top: '10%',
     },
     greetingText: {
         fontSize: 16,
@@ -114,10 +160,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         color: '#8B0000',
-    },
-    profileIcon: {
-        width: 50,
-        height: 50,
     },
     scrollContainer: {
         marginTop: 10,
@@ -132,10 +174,16 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginBottom: 15,
         overflow: 'hidden',
+        position: 'relative', // Add relative positioning for the overlay
     },
     optionImage: {
         width: '100%',
         height: 150,
+        borderRadius: 15,
+    },
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dark transparent overlay
         borderRadius: 15,
     },
     optionText: {
@@ -146,7 +194,7 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         paddingHorizontal: 20,
         borderRadius: 10,
-        alignSelf: 'center'
+        alignSelf: 'center',
     },
     guidelinesText: {
         textAlign: 'center',
