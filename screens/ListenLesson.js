@@ -519,14 +519,18 @@ const ListenLesson = ({ route, navigation }) => {
     // Handle next quiz question
     const handleNextQuestion = () => {
         if (currentQuestionIndex < quizData.length - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-            speakQuizQuestion(); // Speak the next question
+            setCurrentQuestionIndex((prevIndex) => {
+                const newIndex = prevIndex + 1;
+                Speech.speak(quizData[newIndex].question, { rate: speechRate });
+                return newIndex;
+            });
         } else {
             Speech.stop();
             alert("Quiz Completed!");
             navigation.goBack();  // Go back after quiz is completed (or handle differently)
         }
     };
+
 
     // Start recording
     const startRecording = async () => {
@@ -661,7 +665,7 @@ const ListenLesson = ({ route, navigation }) => {
             {/* Header Section */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Icon name="arrow-left" size={24} color="#333" />
+                    <Icon name="arrow-left" size={24} color="#fff" />
                 </TouchableOpacity>
             </View>
 
@@ -820,6 +824,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 30,
+        top: '5%'
     },
     lessonTitle: {
         fontSize: 30,
@@ -898,6 +903,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40,
         borderRadius: 8,
         alignSelf: 'center',
+        top: '5%'
     },
     buttonText: {
         color: '#FFF',

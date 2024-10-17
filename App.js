@@ -29,6 +29,7 @@ import ScanLessonScreen from './screens/ScanLessonScreen';
 import DisplayImageScreen from './screens/DisplayImageScreen';
 import QuizScreen from './screens/QuizScreen';
 import SignWordScreen from './screens/SignWordScreen';
+import ASLInstructionScreen from './screens/ASLInstructionScreen';
 import Toast from 'react-native-toast-message';
 
 const Stack = createStackNavigator();
@@ -131,6 +132,13 @@ const App = () => {
           component={ScanLessonScreen}
           options={{ title: 'Scan Lesson', headerShown: false }}
         />
+
+        <Stack.Screen
+          name="ASLInstruction"
+          component={ASLInstructionScreen}
+          options={{ title: 'Scan Lesson', headerShown: false }}
+        />
+
         <Stack.Screen name="LessonQuiz" component={QuizScreen} />
         <Stack.Screen
           name="BlindHome"
@@ -160,7 +168,7 @@ const App = () => {
         <Stack.Screen
           name="LearnSign"
           component={LearnSignLanguageScreen}
-          options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
+          options={{ title: 'Learn ASL ALPHABET', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#5B3CBB' } }}
         />
         <Stack.Screen
           name="ASL"

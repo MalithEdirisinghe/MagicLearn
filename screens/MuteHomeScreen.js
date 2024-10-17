@@ -37,15 +37,14 @@ const MuteHomeScreen = ({ navigation }) => {
             </View>
             <Text style={styles.subText}>Choose your option!</Text>
             <TouchableOpacity style={styles.button} onPress={handleButton1Press}>
-                <Text style={styles.buttonText}>Learn Sign Language</Text>
+                <Text style={styles.buttonText}>Learn ASL ALPHABET</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleButton3Press}>
+                <Text style={styles.buttonText}>Learn ASL Word</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={handleButton2Press}>
                 <Text style={styles.buttonText}>Lesson & Quiz</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={handleButton3Press}>
-                <Text style={styles.buttonText}>Learn Sign Word</Text>
-            </TouchableOpacity>
-            <Text style={styles.guidelines}>Guidelines</Text>
         </View>
     );
 };
