@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, ScrollView } from 'react-native';
 
 const MuteHomeScreen = ({ navigation }) => {
     const [greeting, setGreeting] = useState('');
+    const [modalVisible, setModalVisible] = useState(false); // Modal visibility state
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -15,13 +16,19 @@ const MuteHomeScreen = ({ navigation }) => {
         }
     }, []);
 
-    const handleButton1Press = () => {
-        navigation.navigate('LearnSign');
+    const handleLearnASLPress = () => {
+        setModalVisible(true); // Show modal
+    };
+
+    const handleNavigateLearnSign = () => {
+        setModalVisible(false); // Hide modal
+        navigation.navigate('LearnSign'); // Navigate after modal
     };
 
     const handleButton2Press = () => {
         navigation.navigate('MuteGif');
     };
+
     const handleButton3Press = () => {
         navigation.navigate('SignWordScreen');
     };
@@ -36,7 +43,7 @@ const MuteHomeScreen = ({ navigation }) => {
                 </View>
             </View>
             <Text style={styles.subText}>Choose your option!</Text>
-            <TouchableOpacity style={styles.button} onPress={handleButton1Press}>
+            <TouchableOpacity style={styles.button} onPress={handleLearnASLPress}>
                 <Text style={styles.buttonText}>Learn ASL ALPHABET</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={handleButton3Press}>
@@ -45,6 +52,31 @@ const MuteHomeScreen = ({ navigation }) => {
             <TouchableOpacity style={styles.button} onPress={handleButton2Press}>
                 <Text style={styles.buttonText}>Lesson & Quiz</Text>
             </TouchableOpacity>
+
+            {/* Modal for Instructions */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>INSTRUCTIONS</Text>
+                        <ScrollView contentContainerStyle={styles.modalBody}>
+                            <Text style={styles.instructionsText}>
+                                Choose the first set of Alphabet, {"\n"}and use the app to teach.{"\n"}
+                                After completing the teaching part, {"\n"}let the child do the quiz.{"\n"}
+                                If the child gets more than {"\n"}2 letters correct, {"\n"}they can go to the next set of letters.{"\n"}
+                                If not, they have to learn again and re-do {"\n"}the quiz.
+                            </Text>
+                        </ScrollView>
+                        <TouchableOpacity style={styles.learnButton} onPress={handleNavigateLearnSign}>
+                            <Text style={styles.learnButtonText}>Let's Learn</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };
@@ -111,10 +143,53 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
-    guidelines: {
+    // Modal Styles
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        width: '90%',
+        backgroundColor: '#fff',
+        borderRadius: 20,
+        padding: 20,
+        alignItems: 'center',
+    },
+    modalTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        color: '#5B3CBB',
+    },
+    modalBody: {
+        alignItems: 'center',
+        paddingHorizontal: 10,
+    },
+    instructionsText: {
         fontSize: 16,
-        color: '#000',
+        color: '#fff',
+        backgroundColor: '#1C3D99',
+        padding: 15,
+        borderRadius: 10,
+        textAlign: 'center',
+        marginBottom: 20,
+        width: '85%',
+        height: '90%'
+    },
+    learnButton: {
+        backgroundColor: '#FF8C00',
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 25,
+        alignItems: 'center',
         marginTop: 20,
+    },
+    learnButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
 });
 

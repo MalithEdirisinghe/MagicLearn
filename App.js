@@ -173,7 +173,7 @@ const App = () => {
         <Stack.Screen
           name="ASL"
           component={ASLScreen}
-          options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
+          options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#5B3CBB' } }}
         />
         <Stack.Screen
           name="MuteGif"

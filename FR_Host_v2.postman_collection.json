@@ -1,0 +1,1455 @@
+{
+	"info": {
+		"_postman_id": "27fe22c0-cf10-41be-9457-d02adda55461",
+		"name": "FR_Host_v2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "29462745"
+	},
+	"item": [
+		{
+			"name": "Sign letter predict",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\ASL_alpha_resourse\\New folder\\A.jpg"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/sign/letter/predict"
+			},
+			"response": [
+				{
+					"name": "Sign letter predict",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\ASL_alpha_resourse\\New folder\\A.jpg"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/sign/letter/predict"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 19:17:32 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "39",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"prediction\": \"A\",\n    \"probability\": \"31%\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Sign letter Error",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"value": "",
+							"type": "file"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/sign/letter/predict"
+			},
+			"response": [
+				{
+					"name": "Sign letter Error",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/sign/letter/predict"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 19:19:53 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "29",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"No selected file\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Sign word action",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\Zameer\\NewOct\\Action\\Dataset\\Help\\0.jpg"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/sign/word/action/predict"
+			},
+			"response": [
+				{
+					"name": "Sign word action",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\Zameer\\NewOct\\Action\\Dataset\\Help\\0.jpg"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/sign/word/action/predict"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 19:20:42 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "40",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"percentage\": \"99.98%\",\n    \"result\": \"Help\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Sign word family",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\Zameer\\new\\new test data\\father\\wrong (2).jpg"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/sign/word/family/predict"
+			},
+			"response": [
+				{
+					"name": "Sign word family",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\Zameer\\new\\new test data\\father\\wrong (2).jpg"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/sign/word/family/predict"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 19:21:53 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "42",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"percentage\": \"95.64%\",\n    \"result\": \"Father\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Sign word greeting",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\Zameer\\new\\new test data\\hello\\correct (2).jpg"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/sign/word/greeting/predict"
+			},
+			"response": [
+				{
+					"name": "Sign word greeting",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\Zameer\\new\\new test data\\hello\\correct (2).jpg"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/sign/word/greeting/predict"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 19:22:35 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "41",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"percentage\": \"98.11%\",\n    \"result\": \"Hello\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Sign word Error",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\Zameer\\new\\new test data\\hello\\correct (2).jpg"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/sign/word/action/predict"
+			},
+			"response": [
+				{
+					"name": "Sign word Error",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\Zameer\\new\\new test data\\hello\\correct (2).jpg"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/sign/word/action/predict"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 19:25:23 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "52",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"result\": \"This is not making the confident limit\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Braile  word AE",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\Braile\\Testt\\data\\BED\\BED_0.jpg"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/blind/word/ae/predict"
+			},
+			"response": [
+				{
+					"name": "Braile  word AE",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\Braile\\Testt\\data\\BED\\BED_0.jpg"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/blind/word/ae/predict"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 19:26:09 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "39",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"class\": \"BED\",\n    \"probability\": \"99.71%\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Braile  word FJ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\VIT_CNN4\\OneDrive_2_9-2-2024\\F - J\\CAFE\\20240831_115006.jpg"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/blind/word/fj/predict"
+			},
+			"response": [
+				{
+					"name": "Braile  word FJ",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\VIT_CNN4\\OneDrive_2_9-2-2024\\F - J\\CAFE\\20240831_115006.jpg"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/blind/word/fj/predict"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 19:30:41 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "41",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"class\": \"CAFE\",\n    \"probability\": \"100.00%\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Braile word Ko",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\VIT_CNN4\\ko\\data\\train\\LOOK\\LOOK_1.jpg"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/blind/word/ko/predict"
+			},
+			"response": [
+				{
+					"name": "Braile word Ko",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\VIT_CNN4\\ko\\data\\train\\LOOK\\LOOK_1.jpg"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/blind/word/ko/predict"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 19:31:06 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "41",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"class\": \"LOOK\",\n    \"probability\": \"100.00%\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Braile word PT",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\VIT_CNN4\\pt\\Dataset\\STAR\\STAR_1.jpg"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/blind/word/pt/predict"
+			},
+			"response": [
+				{
+					"name": "Braile word PT",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\VIT_CNN4\\pt\\Dataset\\STAR\\STAR_1.jpg"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/blind/word/pt/predict"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 19:33:09 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "41",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"class\": \"STAR\",\n    \"probability\": \"100.00%\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Braile word UZ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\VIT_CNN4\\uz\\data\\test\\USE\\USE_4.jpg"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/blind/word/uz/predict"
+			},
+			"response": [
+				{
+					"name": "Braile word UZ",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\VIT_CNN4\\uz\\data\\test\\USE\\USE_4.jpg"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/blind/word/uz/predict"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 19:33:24 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "40",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"class\": \"USE\",\n    \"probability\": \"100.00%\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Braile word Error",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"value": "",
+							"type": "file"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/blind/word/uz/predict"
+			},
+			"response": [
+				{
+					"name": "Braile word Error",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/blind/word/uz/predict"
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 19:33:40 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "55",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"No image file provided.\",\n    \"status\": \"error\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Extract Hand wrinten words",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\Mute\\Resource\\OCR\\Samples\\c.jpg"
+						},
+						{
+							"key": "actual_text",
+							"value": "Chandrapala",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/deaf/extractedText"
+			},
+			"response": [
+				{
+					"name": "Extract Hand wrinten words",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\Mute\\Resource\\OCR\\Samples\\c.jpg"
+								},
+								{
+									"key": "actual_text",
+									"value": "Chandrapala",
+									"type": "text"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/deaf/extractedText"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 20:03:18 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "197",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"actual_text\": \"Chandrapala\",\n    \"correctness_percentage\": \"90.9090909090909%\",\n    \"extra_chars\": [\n        \"Extra character 'h'\"\n    ],\n    \"extracted_text\": \"chahdrapala\",\n    \"incorrect_chars\": [],\n    \"missing_chars\": [\n        \"'n' missing\"\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Extract Hand wrinten Error",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\Mute\\Resource\\OCR\\Samples\\c.jpg"
+						},
+						{
+							"key": "actual_text",
+							"value": "aaasas",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/deaf/extractedText"
+			},
+			"response": [
+				{
+					"name": "Extract Hand wrinten Error",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\Mute\\Resource\\OCR\\Samples\\c.jpg"
+								},
+								{
+									"key": "actual_text",
+									"value": "aaasas",
+									"type": "text"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/deaf/extractedText"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 20:21:49 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "339",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"actual_text\": \"aaasas\",\n    \"correctness_percentage\": \"47.05882352941176%\",\n    \"extra_chars\": [\n        \"Extra character 'c'\",\n        \"Extra character 'h'\",\n        \"Extra character 'h'\",\n        \"Extra character 'd'\",\n        \"Extra character 'r'\",\n        \"Extra character 'p'\",\n        \"Extra character 'l'\"\n    ],\n    \"extracted_text\": \"chahdrapala\",\n    \"incorrect_chars\": [],\n    \"missing_chars\": [\n        \"'s' missing\",\n        \"'s' missing\"\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Extracte Hand wrinten Digits",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "C:\\Users\\Uditha\\Downloads\\18.jpg"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/deaf/digit/predict"
+			},
+			"response": [
+				{
+					"name": "Extracte Hand wrinten Digits",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "C:\\Users\\Uditha\\Downloads\\18.jpg"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/deaf/digit/predict"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 20:22:37 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "38",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"percentage\": \"98.38%\",\n    \"result\": \"18\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Extracte Hand wrinten Digits Error",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"value": "",
+							"type": "file"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/deaf/digit/predict"
+			},
+			"response": [
+				{
+					"name": "Extracte Hand wrinten Digits Error",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/deaf/digit/predict"
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 20:22:55 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "30",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"No selected image\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Extract sentense",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\Mute\\Resource\\OCR\\test.png"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/blind/readText"
+			},
+			"response": [
+				{
+					"name": "Extract sentense",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\Mute\\Resource\\OCR\\test.png"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/blind/readText"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 21:25:06 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1045",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"extracted_text\": \"Jaided Al was founded in 2020 Our goal is to distribute the benefits of Al to the world The first project is an open source OCR library called EasyOCR We build software with the philosophy that it has to be very easy to use while providing stateoftheart performance This is to maximize Al accessiblity for everyone to be ready for the upcoming Al revolution After the success of our open source project we launched our professional service to organizations This is the Enterprise version of EasyOCR Here we aim to help organizations around the world implementing Al technology according to their own need\",\n    \"nouns\": [\n        \"Al\",\n        \"goal\",\n        \"benefits\",\n        \"world\",\n        \"project\",\n        \"source\",\n        \"OCR\",\n        \"library\",\n        \"EasyOCR\",\n        \"software\",\n        \"philosophy\",\n        \"performance\",\n        \"accessiblity\",\n        \"everyone\",\n        \"revolution\",\n        \"success\",\n        \"service\",\n        \"Enterprise\",\n        \"version\",\n        \"organizations\",\n        \"technology\",\n        \"need\"\n    ],\n    \"verbs\": [\n        \"Jaided\",\n        \"was\",\n        \"founded\",\n        \"is\",\n        \"distribute\",\n        \"called\",\n        \"build\",\n        \"has\",\n        \"be\",\n        \"use\",\n        \"providing\",\n        \"maximize\",\n        \"launched\",\n        \"organizations\",\n        \"aim\",\n        \"help\",\n        \"implementing\",\n        \"according\"\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Extract sentense Error",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\Zameer\\new\\new test data\\father\\wrong (2).jpg"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/blind/readText"
+			},
+			"response": [
+				{
+					"name": "Extract sentense Error",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\NewBraileAfter50%\\Zameer\\new\\new test data\\father\\wrong (2).jpg"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/blind/readText"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 21:28:05 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "44",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"extracted_text\": \"\",\n    \"nouns\": [],\n    \"verbs\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Extract text from audio",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "D:\\Freelance\\LearnMagic_FR\\SpeechTo Text\\AudioToText-main\\Mp3\\2.mp3"
+						}
+					]
+				},
+				"url": "http://51.21.134.249/blind/transcribe"
+			},
+			"response": [
+				{
+					"name": "Extract text from audio",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "D:\\Freelance\\LearnMagic_FR\\SpeechTo Text\\AudioToText-main\\Mp3\\2.mp3"
+								}
+							]
+						},
+						"url": "http://51.21.134.249/blind/transcribe"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "JSON",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.4 Python/3.10.11",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 17 Oct 2024 22:29:28 GMT",
+							"type": "text"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "Content-Length",
+							"value": "31",
+							"type": "text"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"type": "text"
+						},
+						{
+							"key": "Connection",
+							"value": "close",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"text\": \"I have two brothers\"\n}"
+				}
+			]
+		}
+	]
+}
