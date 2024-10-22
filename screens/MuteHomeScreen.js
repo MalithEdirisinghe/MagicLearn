@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal, ScrollView } from 'rea
 
 const MuteHomeScreen = ({ navigation }) => {
     const [greeting, setGreeting] = useState('');
-    const [modalVisible, setModalVisible] = useState(false); // Modal visibility state
+    const [alphabetModalVisible, setAlphabetModalVisible] = useState(false); // Modal visibility state for Learn ASL Alphabet
+    const [wordModalVisible, setWordModalVisible] = useState(false); // Modal visibility state for Learn ASL Word
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -17,20 +18,25 @@ const MuteHomeScreen = ({ navigation }) => {
     }, []);
 
     const handleLearnASLPress = () => {
-        setModalVisible(true); // Show modal
+        setAlphabetModalVisible(true); // Show Alphabet modal
+    };
+
+    const handleLearnASLWordPress = () => {
+        setWordModalVisible(true); // Show Word modal
     };
 
     const handleNavigateLearnSign = () => {
-        setModalVisible(false); // Hide modal
+        setAlphabetModalVisible(false); // Hide Alphabet modal
         navigation.navigate('LearnSign'); // Navigate after modal
+    };
+
+    const handleNavigateLearnWord = () => {
+        setWordModalVisible(false); // Hide Word modal
+        navigation.navigate('WordRange'); // Navigate to Learn Word screen
     };
 
     const handleButton2Press = () => {
         navigation.navigate('MuteGif');
-    };
-
-    const handleButton3Press = () => {
-        navigation.navigate('SignWordScreen');
     };
 
     return (
@@ -46,19 +52,19 @@ const MuteHomeScreen = ({ navigation }) => {
             <TouchableOpacity style={styles.button} onPress={handleLearnASLPress}>
                 <Text style={styles.buttonText}>Learn ASL ALPHABET</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={handleButton3Press}>
+            <TouchableOpacity style={styles.button} onPress={handleLearnASLWordPress}>
                 <Text style={styles.buttonText}>Learn ASL Word</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={handleButton2Press}>
                 <Text style={styles.buttonText}>Lesson & Quiz</Text>
             </TouchableOpacity>
 
-            {/* Modal for Instructions */}
+            {/* Modal for ASL Alphabet Instructions */}
             <Modal
                 animationType="slide"
                 transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
+                visible={alphabetModalVisible}
+                onRequestClose={() => setAlphabetModalVisible(false)}
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
@@ -67,11 +73,36 @@ const MuteHomeScreen = ({ navigation }) => {
                             <Text style={styles.instructionsText}>
                                 Choose the first set of Alphabet, {"\n"}and use the app to teach.{"\n"}
                                 After completing the teaching part, {"\n"}let the child do the quiz.{"\n"}
-                                If the child gets more than {"\n"}2 letters correct, {"\n"}they can go to the next set of letters.{"\n"}
-                                If not, they have to learn again and re-do {"\n"}the quiz.
+                                If the child gets more than 2 letters correct, {"\n"}they can go to the next set of letters.{"\n"}
+                                If not, they have to learn again and re-do the quiz.
                             </Text>
                         </ScrollView>
                         <TouchableOpacity style={styles.learnButton} onPress={handleNavigateLearnSign}>
+                            <Text style={styles.learnButtonText}>Let's Learn</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
+            {/* Modal for ASL Word Instructions */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={wordModalVisible}
+                onRequestClose={() => setWordModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>INSTRUCTIONS</Text>
+                        <ScrollView contentContainerStyle={styles.modalBody}>
+                            <Text style={styles.instructionsText1}>
+                                Choose a category, {"\n"}and then choose a word inside and learn.{"\n"}
+                                After learning, the child can attempt {"\n"}the quiz.{"\n"}
+                                The questions will be random, {"\n"}so there won’t be any order.{"\n"}
+                                If the child gets more than 75%,{"\n"}they can pass the quiz and move on to the {"\n"}next category.
+                            </Text>
+                        </ScrollView>
+                        <TouchableOpacity style={styles.learnButton} onPress={handleNavigateLearnWord}>
                             <Text style={styles.learnButtonText}>Let's Learn</Text>
                         </TouchableOpacity>
                     </View>
@@ -143,7 +174,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
-    // Modal Styles
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
@@ -168,15 +198,24 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     instructionsText: {
-        fontSize: 16,
+        fontSize: 13,
         color: '#fff',
         backgroundColor: '#1C3D99',
-        padding: 15,
-        borderRadius: 10,
+        padding: 8,
+        borderRadius: 15,
         textAlign: 'center',
-        marginBottom: 20,
-        width: '85%',
-        height: '90%'
+        width: '100%',
+        alignSelf: 'center',
+    },
+    instructionsText1: {
+        fontSize: 15,
+        color: '#fff',
+        backgroundColor: '#1C3D99',
+        padding: 8,
+        borderRadius: 15,
+        textAlign: 'center',
+        width: '100%',
+        alignSelf: 'center',
     },
     learnButton: {
         backgroundColor: '#FF8C00',

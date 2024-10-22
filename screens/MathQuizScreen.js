@@ -41,7 +41,6 @@ const MathQuizScreen = ({ navigation }) => {
                     <Text style={styles.buttonText}>Tik Tik Tik</Text>
                 </ImageBackground>
             </TouchableOpacity>
-            <Text style={styles.guidelines}>Guidelines</Text>
         </View>
     );
 };
@@ -107,11 +106,6 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 10,
-    },
-    guidelines: {
-        fontSize: 16,
-        color: '#000',
-        marginTop: 20,
     },
 });
 

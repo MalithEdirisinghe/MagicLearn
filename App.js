@@ -30,6 +30,7 @@ import DisplayImageScreen from './screens/DisplayImageScreen';
 import QuizScreen from './screens/QuizScreen';
 import SignWordScreen from './screens/SignWordScreen';
 import ASLInstructionScreen from './screens/ASLInstructionScreen';
+import SignWordRangeScreen from './screens/SignWordRangeScreen';
 import Toast from 'react-native-toast-message';
 
 const Stack = createStackNavigator();
@@ -168,12 +169,17 @@ const App = () => {
         <Stack.Screen
           name="LearnSign"
           component={LearnSignLanguageScreen}
-          options={{ title: 'Learn ASL ALPHABET', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#5B3CBB' } }}
+          options={{ title: 'LEARN ASL ALPHABET', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#5B3CBB' } }}
         />
         <Stack.Screen
           name="ASL"
           component={ASLScreen}
           options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#5B3CBB' } }}
+        />
+        <Stack.Screen
+          name="WordRange"
+          component={SignWordRangeScreen}
+          options={{ title: 'LEARN ASL WORD', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#5B3CBB' } }}
         />
         <Stack.Screen
           name="MuteGif"

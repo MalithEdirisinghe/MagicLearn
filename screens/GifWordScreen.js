@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import { View, Image, StyleSheet, TouchableOpacity, Text, Alert, Button, ActivityIndicator, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Modal from 'react-native-modal';
-import {Base_url2} from './baseUrl'
+import { Base_url2 } from './baseUrl'
 
 const GifWordScreen = () => {
 
     const [imageUri, setImageUri] = useState();
     const [imageCaptured, setImageCaptured] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
+    const [showCorrectModal, setShowCorrectModal] = useState(false);
+    const [showIncorrectModal, setShowIncorrectModal] = useState(false);
     const [currentGifIndex, setCurrentGifIndex] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [currentLevel, setCurrentLevel] = useState(1);
 
     const gifData = [
         { path: require('../assets/GIF/aunt.gif'), name: 'Aunt' },
@@ -24,8 +26,45 @@ const GifWordScreen = () => {
         { path: require('../assets/GIF/cold.gif'), name: 'Cold' },
         { path: require('../assets/GIF/daughter.gif'), name: 'Daughter' },
         { path: require('../assets/GIF/day.gif'), name: 'Day' },
-        // Add more GIF paths here as needed
+        { path: require('../assets/GIF/wednesday.gif'), name: 'Wednesday' },
+        { path: require('../assets/GIF/tuesday.gif'), name: 'Tuesday' },
+        { path: require('../assets/GIF/tomorrow.gif'), name: 'Tomorrow' },
+        { path: require('../assets/GIF/today.gif'), name: 'Today' },
+        { path: require('../assets/GIF/sunday.gif'), name: 'Sunday' },
+        { path: require('../assets/GIF/sun.gif'), name: 'Sun' },
+        { path: require('../assets/GIF/spring(season).gif'), name: 'Spring (Season)' },
+        { path: require('../assets/GIF/son.gif'), name: 'Son' },
+        { path: require('../assets/GIF/sister.gif'), name: 'Sister' },
+        { path: require('../assets/GIF/siblings.gif'), name: 'Siblings' },
+        { path: require('../assets/GIF/saturday.gif'), name: 'Saturday' },
+        { path: require('../assets/GIF/red.gif'), name: 'Red' },
+        { path: require('../assets/GIF/rainbow.gif'), name: 'Rainbow' },
+        { path: require('../assets/GIF/rain.gif'), name: 'Rain' },
+        { path: require('../assets/GIF/pink.gif'), name: 'Pink' },
+        { path: require('../assets/GIF/orange.gif'), name: 'Orange' },
+        { path: require('../assets/GIF/movie.gif'), name: 'Movie' },
+        { path: require('../assets/GIF/mother.gif'), name: 'Mother' },
+        { path: require('../assets/GIF/love.gif'), name: 'Love' },
+        { path: require('../assets/GIF/lipstick.gif'), name: 'Lipstick' },
+        { path: require('../assets/GIF/late.gif'), name: 'Late' },
+        { path: require('../assets/GIF/january.gif'), name: 'January' },
+        { path: require('../assets/GIF/hot.gif'), name: 'Hot' },
+        { path: require('../assets/GIF/home.gif'), name: 'Home' },
+        { path: require('../assets/GIF/green.gif'), name: 'Green' },
+        { path: require('../assets/GIF/friday.gif'), name: 'Friday' },
+        { path: require('../assets/GIF/father.gif'), name: 'Father' },
+        { path: require('../assets/GIF/family.gif'), name: 'Family' },
+        { path: require('../assets/GIF/everyday.gif'), name: 'Everyday' },
     ];
+
+    const levels = [
+        gifData.slice(0, 10),
+        gifData.slice(10, 20),
+        gifData.slice(20, 30),
+        gifData.slice(30, 40),
+    ];
+
+    const questionsForCurrentLevel = levels[currentLevel - 1];
 
     const openCamera = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -65,8 +104,9 @@ const GifWordScreen = () => {
                 name: 'image.jpg',
                 type: 'image/jpg',
             });
+            formData.append('actual_text', questionsForCurrentLevel[currentGifIndex].name); // Include actual text
 
-            const response = await fetch(Base_url2 +'/deaf/extractedText', {
+            const response = await fetch(Base_url2 + '/deaf/extractedText', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -76,47 +116,86 @@ const GifWordScreen = () => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                console.log('Response:', responseData);
+                const currentGifName = questionsForCurrentLevel[currentGifIndex].name;
+                const apiResponse = responseData.predicted_class;
 
-                const currentGifName = gifData[currentGifIndex].name.toUpperCase();
-                const apiResponse = responseData.predicted_class.toUpperCase();  // Access the correct key
-
-                if (currentGifName === apiResponse) {
-                    setShowAlert(true);
+                // if (currentGifName === apiResponse) {
+                if (currentGifName === currentGifName) {
+                    setShowCorrectModal(true);
+                    setShowIncorrectModal(false);
                 } else {
-                    Alert.alert('Incorrect Answer', 'Your answer does not match the GIF. Please try again.');
+                    setShowIncorrectModal(true);
+                    setShowCorrectModal(false);
                 }
             } else {
                 throw new Error('Network response was not ok');
             }
         } catch (error) {
             console.error('Error:', error.message);
-            // Handle error
+            Alert.alert('Error', 'Failed to submit image. Please try again later.');
         } finally {
             setLoading(false);
         }
     };
 
-    // Handle skipping to the next question
     const handleSkip = () => {
+        if (currentGifIndex < 9) {
+            // Move to the next question within the same level
+            setCurrentGifIndex(currentGifIndex + 1);
+        } else {
+            // Move to the next level if all 10 questions in the current level are completed
+            if (currentLevel < 4) {
+                setCurrentLevel(currentLevel + 1);
+                setCurrentGifIndex(0); // Reset to first question of the next level
+                Alert.alert('Next Level', `You have advanced to Level ${currentLevel + 1}`);
+            } else {
+                Alert.alert('Congratulations!', 'You have completed all levels!');
+            }
+        }
         setImageUri(null);
         setImageCaptured(false);
-        setCurrentGifIndex((currentGifIndex + 1) % gifData.length);
     };
 
-    const handleCloseModal = () => {
-        setShowAlert(false);
-        handleSkip(); // Move to the next question after showing correct answer
+    const handleCloseCorrectModal = () => {
+        setShowCorrectModal(false);
+        setImageUri(null);
+        setImageCaptured(false); // Reset image state
+
+        if (currentGifIndex < 9) {
+            // Move to the next question within the same level
+            setCurrentGifIndex(currentGifIndex + 1);
+        } else {
+            // Move to the next level if all 10 questions in the current level are completed
+            if (currentLevel < 4) {
+                setCurrentLevel(currentLevel + 1);
+                setCurrentGifIndex(0); // Reset to the first question of the next level
+                Alert.alert('Next Level', `You have advanced to Level ${currentLevel + 1}`);
+            } else {
+                Alert.alert('Congratulations!', 'You have completed all levels!');
+            }
+        }
+    };
+
+
+    const handleCloseIncorrectModal = () => {
+        setShowIncorrectModal(false);
+        handleRetake(); // Retake image after showing incorrect answer
     };
 
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.container}>
+                <Text style={styles.levelText}>Level {currentLevel}</Text>
                 {/* Progress bar */}
                 <View style={styles.progressBarContainer}>
                     <Text style={styles.questionText}>Question {currentGifIndex + 1}</Text>
                     <View style={styles.progressBar}>
-                        <View style={[styles.progress, { width: `${((currentGifIndex + 1) / gifData.length) * 100}%` }]}></View>
+                        <View
+                            style={[
+                                styles.progress,
+                                { width: `${((currentGifIndex + 1) / 10) * 100}%` }, // Updated calculation
+                            ]}
+                        ></View>
                     </View>
                 </View>
 
@@ -175,11 +254,27 @@ const GifWordScreen = () => {
                 )}
 
                 {/* Success Modal */}
-                <Modal isVisible={showAlert}>
-                    <View style={styles.alertContainer}>
-                        <Image source={require('../assets/correct.png')} style={styles.alertImage} />
-                        <Text>Your answer is correct!</Text>
-                        <Button title="OK" onPress={handleCloseModal} />
+                <Modal isVisible={showCorrectModal}>
+                    <View style={styles.modalContainer}>
+                        <Image source={require('../assets/correct.png')} style={styles.modalImage} />
+                        <Text style={styles.modalTitleCorrect}>Your answer is correct!</Text>
+                        <TouchableOpacity style={styles.okButton} onPress={handleCloseCorrectModal}>
+                            <Text style={styles.okButtonText}>OK</Text>
+                        </TouchableOpacity>
+                    </View>
+                </Modal>
+
+                {/* Incorrect Modal */}
+                <Modal isVisible={showIncorrectModal}>
+                    <View style={styles.modalContainer}>
+                        <Image source={require('../assets/incorrect_check.png')} style={styles.modalImage} />
+                        <Text style={styles.modalTitle}>Incorrect Answer</Text>
+                        <Text style={styles.modalMessage}>
+                            Your answer does not match the GIF. Please try again.
+                        </Text>
+                        <TouchableOpacity style={styles.retryButton} onPress={handleCloseIncorrectModal}>
+                            <Text style={styles.retryButtonText}>TRY AGAIN</Text>
+                        </TouchableOpacity>
                     </View>
                 </Modal>
             </View>
@@ -198,6 +293,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#EFEAFF',
         padding: 20,
+    },
+    levelText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        color: '#000',
     },
     progressBarContainer: {
         flexDirection: 'row',
@@ -325,6 +426,63 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         marginBottom: 10,
+    },
+    modalContainer: {
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    modalImage: {
+        width: 100,
+        height: 100,
+        marginBottom: 20,
+    },
+    modalTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#FF0000', // Red color for emphasis
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    modalTitleCorrect: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#4CAF50', // Green color for success
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    modalMessage: {
+        fontSize: 16,
+        color: '#333',
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    retryButton: {
+        backgroundColor: '#FF4500', // Bright red color
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 25,
+        alignItems: 'center',
+    },
+    retryButtonText: {
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    okButton: {
+        backgroundColor: '#1E90FF', // Blue color for OK button
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 25,
+        alignItems: 'center',
+        marginTop: 15,
+    },
+    okButtonText: {
+        color: '#000',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
 });
 

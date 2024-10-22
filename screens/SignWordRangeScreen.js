@@ -5,15 +5,12 @@ import { LinearGradient } from 'expo-linear-gradient'; // For gradient backgroun
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native'; // For screen focus
 
-const LearnSignLanguageScreen = ({ navigation }) => {
+const SignWordRangeScreen = ({ navigation }) => {
     // State to manage unlocked ranges
     const [unlockedRanges, setUnlockedRanges] = useState({
-        'A to D': true,  // Initially unlocked
-        'E to H': false,
-        'I to L': false,
-        'M to P': false,
-        'Q to T': false,
-        'U to Z': false
+        'Family Relations': true,  // Initially unlocked
+        'Actions': false,
+        'Social Manners': false
     });
 
     // State to handle refresh
@@ -25,7 +22,7 @@ const LearnSignLanguageScreen = ({ navigation }) => {
     // Load unlocked ranges from AsyncStorage
     const loadUnlockedRanges = async () => {
         try {
-            const ranges = ['E to H', 'I to L', 'M to P', 'Q to T', 'U to Z'];
+            const ranges = ['Actions', 'Social Manners'];
             const newUnlockedRanges = { ...unlockedRanges };
 
             // Loop through each range and check if it is unlocked
@@ -58,26 +55,23 @@ const LearnSignLanguageScreen = ({ navigation }) => {
             Alert.alert("Range Locked", "You need to complete the previous ranges to unlock this one.");
         } else {
             // Navigate to the ASL screen if the range is unlocked
-            navigation.navigate('ASL', { range });
+            navigation.navigate('SignWordScreen', { range });
         }
     };
 
     // Reset unlocked ranges and clear AsyncStorage
     const resetUnlockedRanges = async () => {
         try {
-            const ranges = ['E to H', 'I to L', 'M to P', 'Q to T', 'U to Z'];
+            const ranges = ['Actions', 'Social Manners'];
             for (const range of ranges) {
                 await AsyncStorage.removeItem(`unlocked_${range}`);
             }
 
             // Reset state to the initial values
             setUnlockedRanges({
-                'A to D': true,
-                'E to H': false,
-                'I to L': false,
-                'M to P': false,
-                'Q to T': false,
-                'U to Z': false
+                'Family Relations': true,
+                'Actions': false,
+                'Social Manners': false
             });
 
             setIsUpdated(prev => !prev); // Force update to re-render
@@ -108,21 +102,21 @@ const LearnSignLanguageScreen = ({ navigation }) => {
                 {/* A to D - Unlocked initially */}
                 <TouchableOpacity
                     style={styles.list}
-                    onPress={() => handleRangePress('A to D', !unlockedRanges['A to D'])}
+                    onPress={() => handleRangePress('Family Relations', !unlockedRanges['Family Relations'])}
                 >
                     <LinearGradient colors={['#0039A9', '#005ED9']} style={styles.gradient}>
-                        <Text style={styles.text1}>A - D</Text>
+                        <Text style={styles.text1}>FAMILY RELATIONS</Text>
                     </LinearGradient>
                 </TouchableOpacity>
 
                 {/* E to H */}
                 <TouchableOpacity
                     style={styles.list}
-                    onPress={() => handleRangePress('E to H', !unlockedRanges['E to H'])}
+                    onPress={() => handleRangePress('Ac', !unlockedRanges['E to H'])}
                 >
                     <LinearGradient colors={['#0039A9', '#005ED9']} style={styles.gradient}>
-                        <Text style={styles.text1}>E - H</Text>
-                        {!unlockedRanges['E to H'] && (
+                        <Text style={styles.text1}>ACTIONS</Text>
+                        {!unlockedRanges['Actions'] && (
                             <Ionicons name="lock-closed" size={24} color="white" style={styles.lockIcon} />
                         )}
                     </LinearGradient>
@@ -134,47 +128,8 @@ const LearnSignLanguageScreen = ({ navigation }) => {
                     onPress={() => handleRangePress('I to L', !unlockedRanges['I to L'])}
                 >
                     <LinearGradient colors={['#0039A9', '#005ED9']} style={styles.gradient}>
-                        <Text style={styles.text1}>I - L</Text>
-                        {!unlockedRanges['I to L'] && (
-                            <Ionicons name="lock-closed" size={24} color="white" style={styles.lockIcon} />
-                        )}
-                    </LinearGradient>
-                </TouchableOpacity>
-
-                {/* M to P */}
-                <TouchableOpacity
-                    style={styles.list}
-                    onPress={() => handleRangePress('M to P', !unlockedRanges['M to P'])}
-                >
-                    <LinearGradient colors={['#0039A9', '#005ED9']} style={styles.gradient}>
-                        <Text style={styles.text1}>M - P</Text>
-                        {!unlockedRanges['M to P'] && (
-                            <Ionicons name="lock-closed" size={24} color="white" style={styles.lockIcon} />
-                        )}
-                    </LinearGradient>
-                </TouchableOpacity>
-
-                {/* Q to T */}
-                <TouchableOpacity
-                    style={styles.list}
-                    onPress={() => handleRangePress('Q to T', !unlockedRanges['Q to T'])}
-                >
-                    <LinearGradient colors={['#0039A9', '#005ED9']} style={styles.gradient}>
-                        <Text style={styles.text1}>Q - T</Text>
-                        {!unlockedRanges['Q to T'] && (
-                            <Ionicons name="lock-closed" size={24} color="white" style={styles.lockIcon} />
-                        )}
-                    </LinearGradient>
-                </TouchableOpacity>
-
-                {/* U to Z */}
-                <TouchableOpacity
-                    style={styles.list}
-                    onPress={() => handleRangePress('U to Z', !unlockedRanges['U to Z'])}
-                >
-                    <LinearGradient colors={['#0039A9', '#005ED9']} style={styles.gradient}>
-                        <Text style={styles.text1}>U - Z</Text>
-                        {!unlockedRanges['U to Z'] && (
+                        <Text style={styles.text1}>SOCIAL MANNERS</Text>
+                        {!unlockedRanges['Social Manners'] && (
                             <Ionicons name="lock-closed" size={24} color="white" style={styles.lockIcon} />
                         )}
                     </LinearGradient>
@@ -238,4 +193,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default LearnSignLanguageScreen;
+export default SignWordRangeScreen;

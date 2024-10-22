@@ -5,8 +5,8 @@ import {Base_url1} from './baseUrl'
 
 const SignWordScreen = () => {
     const wordsWithImages = {
-        'Father': require('../assets/signWord/father.png'),
-        'Mother': require('../assets/signWord/mother.png'),
+        'Father': require('../assets/signWord/Family Relations/father.png'),
+        'Mother': require('../assets/signWord/Family Relations/mother.png'),
         'Hello': require('../assets/signWord/hello.png'),
         'Please': require('../assets/signWord/please.png'),
         'Thank You': require('../assets/signWord/thankyou.png'),
