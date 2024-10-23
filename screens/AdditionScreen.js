@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
 import AnalogClock from './AnalogClock';
 import Signature from "react-native-signature-canvas";
-import {Base_url1} from './baseUrl'
+import { Base_url1 } from './baseUrl'
 
 const MathOperationScreen = ({ route }) => {
     const { operation } = route.params;
@@ -26,9 +26,16 @@ const MathOperationScreen = ({ route }) => {
     const [randomHour, setRandomHour] = useState(0);
     const [randomMinutes, setRandomMinutes] = useState(0);
     const [whiteBoardVisible, setWhiteBoardVisible] = useState(false); // Whiteboard Modal
-    const [signatureVisible, setSignatureVisible] = useState(false); // Signature Modal
     const [signature, setSignature] = useState(""); // Store signature data
     const [apiResponse, setApiResponse] = useState(""); // Store API response
+    const [resultModalVisible, setResultModalVisible] = useState(false);
+    const [resultMessage, setResultMessage] = useState(''); // Message to show in the result modal
+    const [toastModalVisible, setToastModalVisible] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastType, setToastType] = useState(''); // 'success' or 'error'
+
+    
+    let correct;
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -106,7 +113,6 @@ const MathOperationScreen = ({ route }) => {
     };
 
     const handleChooseAnswerPress = () => {
-        let correct;
 
         if (operation === 'Tik') {
             // Format the correct time in HH:MM format
@@ -156,31 +162,31 @@ const MathOperationScreen = ({ route }) => {
     };
 
     const handleSubmitSelectedAnswer = () => {
+    if (selectedAnswer === correctAnswer) {
+        setToastMessage('Correct!');
+        setToastType('success');
+        setToastModalVisible(true);
+        setCorrectAnswers(correctAnswers + 1);
         setChooseAnswerModalVisible(false);
-        if (selectedAnswer === correctAnswer) {
-            Toast.show({
-                type: 'success',
-                text1: 'Correct!',
-            });
-            setCorrectAnswers(correctAnswers + 1);
-            if (correctAnswers + 1 === 10) {
-                setLevel(level + 1);
-                setCorrectAnswers(0);
-                setLevelCompletedModalVisible(true);  // Show level completed modal
-            }
-            if (operation === 'Tik') {
-                generateRandomTime();  // Generate a new random time
-            } else {
-                generateQuestion();
-            }
-        } else {
-            Toast.show({
-                type: 'error',
-                text1: 'Wrong!',
-                text2: `The correct answer is ${correctAnswer}`,
-            });
+
+        if (correctAnswers + 1 === 10) {
+            setLevel(level + 1);
+            setCorrectAnswers(0);
+            setLevelCompletedModalVisible(true);
         }
-    };
+
+        if (operation === 'Tik') {
+            generateRandomTime();
+        } else {
+            generateQuestion();
+        }
+    } else {
+        setToastMessage(`Wrong! The correct answer is ${correctAnswer}`);
+        setToastType('error');
+        setToastModalVisible(true);
+        setChooseAnswerModalVisible(false);
+    }
+}
 
     const handleCloseModal = () => {
         setModalVisible(false);
@@ -208,7 +214,7 @@ const MathOperationScreen = ({ route }) => {
             });
 
             // Send the FormData object to the API
-            const response = await fetch(Base_url1+":2990/mute/digit/predict", {
+            const response = await fetch(Base_url1 + "/deaf/digit/predict", {
                 method: "POST",
                 body: formData,
                 headers: {
@@ -222,75 +228,90 @@ const MathOperationScreen = ({ route }) => {
                 const result = await response.json();
                 console.log('content', result);
 
-                // Provide detailed feedback based on API response
-                if (result.status === "error") {
-                    if (result.message.includes("confidence threshold")) {
-                        setApiResponse("The image submitted was unclear. Please try again with a clearer image.");
-                        // Optionally trigger a retry flow here
+                // Ensure both values are numbers and handle potential undefined values
+                const apiResult = parseInt(result.result, 10);
+                // const correctNum = parseInt(correctAnswer, 10);
+                let correctNum;
+                if (operation === 'subtraction') {
+                    correctNum = number1 - number2;
+                } else {
+                    correctNum = number1 + number2;
+                }
+                console.log('result', apiResult);
+                console.log('correct', correctNum);
+
+                if (!isNaN(apiResult) && !isNaN(correctNum)) {
+                    // Compare the API result with the correct answer
+                    if (apiResult === correctNum) {
+                    // if (correctNum === correctNum) {
+                        setResultMessage('Correct! The answer is correct.');
                     } else {
-                        setApiResponse(result.message); // Display other error messages
+                        setResultMessage(`Incorrect. The correct answer is: ${correctNum}`);
                     }
                 } else {
-                    setApiResponse(result.message); // Store success response
+                    setResultMessage("Failed to compare results. Please try again.");
                 }
+
+                setResultModalVisible(true); // Show the result modal
             } else {
                 const text = await response.text();
-                setApiResponse("Unexpected response format from server");
+                setResultMessage("Unexpected response format from server");
+                setResultModalVisible(true);
             }
         } catch (error) {
             console.error("Error sending signature to API:", error);
-            setApiResponse("Failed to send signature. Please check your connection or try again later.");
+            setResultMessage("Failed to send signature. Please check your connection or try again later.");
+            setResultModalVisible(true);
         }
     };
 
-
     const handleSubmitAnswer = () => {
         if (userAnswer.trim() === '') {
-            Toast.show({
-                type: 'error',
-                text1: 'Please enter the Answer',
-            });
+            setToastMessage('Please enter the Answer');
+            setToastType('error');
+            setToastModalVisible(true);
         } else {
             let correctAnswer;
 
             if (operation === 'Tik') {
-                correctAnswer = `${randomHour}:${randomMinutes < 10 ? '0' : ''}${randomMinutes}`;  // Correct time in HH:MM format
+                correctAnswer = `${randomHour}:${randomMinutes < 10 ? '0' : ''}${randomMinutes}`;
             } else {
                 correctAnswer = operation === 'subtraction' ? number1 - number2 : number1 + number2;
             }
 
             if (operation === 'Tik' && userAnswer.trim() === correctAnswer) {
-                Toast.show({
-                    type: 'success',
-                    text1: 'Correct!',
-                });
+                setToastMessage('Correct!');
+                setToastType('success');
+                setToastModalVisible(true);
                 setCorrectAnswers(correctAnswers + 1);
+
                 if (correctAnswers + 1 === 10) {
                     setLevel(level + 1);
                     setCorrectAnswers(0);
-                    setLevelCompletedModalVisible(true);  // Show level completed modal
+                    setLevelCompletedModalVisible(true);
                 }
+
                 handleCloseModal();
-                generateRandomTime();  // Generate a new random time
+                generateRandomTime();
             } else if (parseInt(userAnswer) === correctAnswer) {
-                Toast.show({
-                    type: 'success',
-                    text1: 'Correct!',
-                });
+                setToastMessage('Correct!');
+                setToastType('success');
+                setToastModalVisible(true);
                 setCorrectAnswers(correctAnswers + 1);
+
                 if (correctAnswers + 1 === 10) {
                     setLevel(level + 1);
                     setCorrectAnswers(0);
-                    setLevelCompletedModalVisible(true);  // Show level completed modal
+                    setLevelCompletedModalVisible(true);
                 }
+
                 handleCloseModal();
                 generateQuestion();
             } else {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Wrong!',
-                    text2: `The correct answer is ${correctAnswer}`,
-                });
+                setToastMessage(`Wrong! The correct answer is ${correctAnswer}`);
+                setToastType('error');
+                setToastModalVisible(true);
+                handleCloseModal();
             }
         }
     };
@@ -410,28 +431,55 @@ const MathOperationScreen = ({ route }) => {
 
             {/* Whiteboard Modal */}
             <Modal visible={whiteBoardVisible} animationType="slide">
-                <View style={styles.modalContainer}>
-                    <Text style={styles.modalTitle}>Whiteboard</Text>
+                <View style={styles.whiteboardContainer}>
+                    <Text style={styles.whiteboardHeader}>Write on the Whiteboard</Text>
                     <Signature
+                        style={styles.whiteboardSignature}
                         onOK={handleSignatureSave}
-                        onEmpty={() => console.log("Signature is empty")}
-                        onClear={() => console.log("Signature cleared")}
-                        descriptionText="Sign here"
+                        onEmpty={() => Toast.show({ type: 'info', text1: 'Whiteboard is empty' })}
+                        onClear={() => Toast.show({ type: 'info', text1: 'Whiteboard cleared' })}
+                        descriptionText="Use your finger to draw"
                         clearText="Clear"
                         confirmText="Submit"
                         penColor="black"
-                        dotSize={5}
-                        minWidth={5}
+                        dotSize={3}
+                        minWidth={3}
                         maxWidth={5}
-                        webStyle={`.m-signature-pad { box-shadow: none; border: none; } .m-signature-pad--body { border: 1px solid #000; }`}
+                        backgroundColor="#FFFFFF"
+                        webStyle={`.m-signature-pad { box-shadow: none; border: none; } 
+                       .m-signature-pad--body { border: 1px solid #ccc; }`}
                     />
+                    <View style={styles.whiteboardButtonContainer}>
+                        <TouchableOpacity
+                            style={styles.whiteboardButton}
+                            onPress={handleWhiteBoardClose}
+                        >
+                            <Text style={styles.whiteboardButtonText}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
 
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={handleWhiteBoardClose}
-                    >
-                        <Text style={styles.buttonText}>Close</Text>
-                    </TouchableOpacity>
+            {/* Result Modal */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={resultModalVisible}
+                onRequestClose={() => setResultModalVisible(false)}
+            >
+                <View style={styles.toastModalContainer}>
+                    <View style={[
+                        styles.toastModalContent,
+                        resultMessage.includes('Correct') ? styles.toastSuccess : styles.toastError
+                    ]}>
+                        <Text style={styles.toastModalText}>{resultMessage}</Text>
+                        <TouchableOpacity
+                            style={styles.toastModalButton}
+                            onPress={() => setResultModalVisible(false)}
+                        >
+                            <Text style={styles.toastModalButtonText}>OK</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </Modal>
 
@@ -495,6 +543,26 @@ const MathOperationScreen = ({ route }) => {
                     </View>
                 </View>
             </Modal>
+            {/* Toast Modal */}
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={toastModalVisible}
+                onRequestClose={() => setToastModalVisible(false)}
+            >
+                <View style={styles.toastModalContainer}>
+                    <View style={[styles.toastModalContent,
+                    toastType === 'success' ? styles.toastSuccess : styles.toastError]}>
+                        <Text style={styles.toastModalText}>{toastMessage}</Text>
+                        <TouchableOpacity
+                            style={styles.toastModalButton}
+                            onPress={() => setToastModalVisible(false)}
+                        >
+                            <Text style={styles.toastModalButtonText}>OK</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </ScrollView>
     );
 };
@@ -526,7 +594,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: 327,
         height: 84,
-        left: 24,
         top: 144,
         backgroundColor: '#FFC0CB',
         borderRadius: 15,
@@ -701,7 +768,8 @@ const styles = StyleSheet.create({
         padding: 10,
         marginTop: 10,
         fontSize: 18,
-        textAlign: 'center'
+        textAlign: 'center',
+        color: '#000'
     },
     modalContainer: {
         flex: 1,
@@ -711,14 +779,15 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: '80%',
-        backgroundColor: '#6A5AE0',
+        backgroundColor: '#FFF',
         borderRadius: 20,
-        padding: 20,
+        padding: 30,
         alignItems: 'center',
-        shadowColor: '#8257E5',
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.7,
-        shadowRadius: 20,
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
+        elevation: 10,
     },
     modalContentComplete: {
         width: '80%',
@@ -735,7 +804,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
-        color: '#FFF',
+        color: '#000',
     },
     modalAnswerButton: {
         width: '100%',
@@ -798,6 +867,133 @@ const styles = StyleSheet.create({
         width: 150,
         height: 150,
         marginBottom: 20,
+    }, whiteboardContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F9F9F9', // Whiteboard-like background
+        padding: 20,
+    },
+    whiteboardHeader: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 10,
+    },
+    whiteboardSignature: {
+        width: '100%',
+        height: '60%',
+        borderWidth: 1,
+        borderColor: '#C0C0C0',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 2,
+    },
+    whiteboardButtonContainer: {
+        flexDirection: 'row',
+        marginTop: 20,
+        justifyContent: 'space-around',
+        width: '100%',
+    },
+    whiteboardButton: {
+        backgroundColor: '#6A5AE0',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+        width: '40%',
+        alignItems: 'center',
+    },
+    whiteboardButtonText: {
+        color: '#FFF',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    resultModalText: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#32CD32', // LimeGreen for a correct answer
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+
+    resultModalErrorText: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#FF4500', // Red for an incorrect answer
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+
+    resultButton: {
+        marginTop: 20,
+        backgroundColor: '#FF6347', // Vibrant Tomato color
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 25,
+        alignItems: 'center',
+        shadowColor: '#FF4500',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.4,
+        shadowRadius: 10,
+        elevation: 5,
+    },
+
+    resultButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    toastModalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+
+    toastModalContent: {
+        width: '80%',
+        padding: 20,
+        borderRadius: 15,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
+        elevation: 10,
+    },
+
+    toastSuccess: {
+        backgroundColor: '#32CD32', // LimeGreen for success
+    },
+
+    toastError: {
+        backgroundColor: '#FF6347', // Tomato Red for error
+    },
+
+    toastModalText: {
+        fontSize: 18,
+        color: '#FFF',
+        textAlign: 'center',
+        marginBottom: 15,
+    },
+
+    toastModalButton: {
+        marginTop: 10,
+        backgroundColor: '#FFF',
+        paddingVertical: 8,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+
+    toastModalButtonText: {
+        color: '#FF6347',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 
