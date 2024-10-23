@@ -210,23 +210,6 @@ const ASLScreen = ({ navigation, route }) => {
         }
     };
 
-    // const handleResults = () => {
-    //     const correctAnswers = results.filter(item => item.isCorrect).length;
-    //     if (correctAnswers > 2) {
-    //         // Navigate to LearnSign screen if more than two answers are correct
-    //         navigation.navigate('LearnSign');
-    //     } else {
-    //         // Allow user to try again if less than or equal to two correct answers
-    //         Alert.alert(
-    //             'Try Again',
-    //             'You need to get more than two correct answers to proceed.',
-    //             [
-    //                 { text: 'OK', onPress: () => setShowResultsModal(false) }
-    //             ]
-    //         );
-    //         setQuizStarted(false); // Reset quiz
-    //     }
-    // };
     const handleResults = async () => {
         const correctAnswers = results.filter(item => item.isCorrect).length;
         const rangesMap = {

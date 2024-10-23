@@ -8,7 +8,7 @@ import { useFocusEffect } from '@react-navigation/native'; // For screen focus
 const SignWordRangeScreen = ({ navigation }) => {
     // State to manage unlocked ranges
     const [unlockedRanges, setUnlockedRanges] = useState({
-        'Family Relations': true,  // Initially unlocked
+        'Family Relations': true,
         'Actions': false,
         'Social Manners': false
     });
@@ -112,7 +112,7 @@ const SignWordRangeScreen = ({ navigation }) => {
                 {/* E to H */}
                 <TouchableOpacity
                     style={styles.list}
-                    onPress={() => handleRangePress('Ac', !unlockedRanges['E to H'])}
+                    onPress={() => handleRangePress('Actions', !unlockedRanges['Actions'])}
                 >
                     <LinearGradient colors={['#0039A9', '#005ED9']} style={styles.gradient}>
                         <Text style={styles.text1}>ACTIONS</Text>
@@ -125,7 +125,7 @@ const SignWordRangeScreen = ({ navigation }) => {
                 {/* I to L */}
                 <TouchableOpacity
                     style={styles.list}
-                    onPress={() => handleRangePress('I to L', !unlockedRanges['I to L'])}
+                    onPress={() => handleRangePress('Social Manners', !unlockedRanges['Social Manners'])}
                 >
                     <LinearGradient colors={['#0039A9', '#005ED9']} style={styles.gradient}>
                         <Text style={styles.text1}>SOCIAL MANNERS</Text>

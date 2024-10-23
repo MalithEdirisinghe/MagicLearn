@@ -126,7 +126,7 @@ const App = () => {
         <Stack.Screen
           name="SignWordScreen"
           component={SignWordScreen}
-          options={{ headerShown: true, headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
+          options={{ headerShown: true, title: '', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#5B3CBB' } }}
         />
         <Stack.Screen
           name="ScanLessonScreen"
