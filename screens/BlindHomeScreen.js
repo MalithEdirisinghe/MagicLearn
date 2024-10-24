@@ -7,20 +7,26 @@ const BlindHomeScreen = ({ navigation }) => {
     };
 
     const handleButton2Press = () => {
-        navigation.navigate('BlindQuiz');
+        navigation.navigate('VoiceLearnLevel');
+    };
+    const handleButton3Press = () => {
+        navigation.navigate('CaptureLearn');
     };
 
     return (
-            <View style={styles.container}>
-                <Text style={styles.instructionText}>Learn for Blind Kinds</Text>
-                <Text style={styles.subText}>Please choose an option:</Text>
-                <TouchableOpacity style={styles.button} onPress={handleButton1Press}>
-                    <Text style={styles.buttonText}>Learn Braille</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={handleButton2Press}>
-                    <Text style={styles.buttonText}>Lesson & Quiz</Text>
-                </TouchableOpacity>
-            </View>
+        <View style={styles.container}>
+            <Text style={styles.instructionText}>Learn for Blind Kids</Text>
+            <Text style={styles.subText}>Please choose an option:</Text>
+            <TouchableOpacity style={styles.button} onPress={handleButton1Press}>
+                <Text style={styles.buttonText}>Learn Braille</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonSecondary} onPress={handleButton2Press}>
+                <Text style={styles.buttonText}>Lesson & Quiz</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleButton3Press}>
+                <Text style={styles.buttonText}>Capture & Learn</Text>
+            </TouchableOpacity>
+        </View>
     );
 };
 
@@ -29,26 +35,49 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#F4F6F9', // Light background to match Figma theme
+        paddingHorizontal: 20,
     },
     instructionText: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
+        fontSize: 28, // Larger font size for the main instruction
+        fontWeight: '700', // Bolder font weight
+        color: '#333', // Darker color for contrast
+        marginBottom: 15,
     },
     subText: {
         fontSize: 18,
-        marginBottom: 20,
+        color: '#666', // Softer subtext color
+        marginBottom: 30,
     },
     button: {
-        backgroundColor: '#4D86F7',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 8,
+        backgroundColor: '#4D86F7', // Primary button color
+        paddingVertical: 15, // More padding for better UX
+        paddingHorizontal: 50,
+        borderRadius: 30, // Rounded button for modern feel
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 5, // Shadow for Android
+    },
+    buttonSecondary: {
+        backgroundColor: '#FF6F61', // Secondary button with a different color
+        paddingVertical: 15,
+        paddingHorizontal: 50,
+        borderRadius: 30,
         marginBottom: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 5,
     },
     buttonText: {
-        color: '#fff',
+        color: '#fff', // White text for better contrast
         fontSize: 18,
+        fontWeight: '500',
+        textAlign: 'center',
     },
 });
 

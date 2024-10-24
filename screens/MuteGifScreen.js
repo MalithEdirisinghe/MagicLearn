@@ -7,7 +7,7 @@ const MuteHomeScreen = ({ navigation }) => {
     };
 
     const handleButton2Press = () => {
-        // navigation.navigate('BlindQuiz');
+        navigation.navigate('MathsQuiz');
     };
 
     return (

@@ -5,7 +5,6 @@ const BlindLessonScreen = ({ navigation }) => {
 
     const handleButtonPress = (category) => {
         navigation.navigate('LessonCat', { category });
-        console.log('cat: ', category);
     };
 
     return (
