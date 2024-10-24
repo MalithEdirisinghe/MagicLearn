@@ -10,9 +10,16 @@ const BrailleTeachScreen = ({ navigation }) => {
 
         // Initiate the speech
         Speech.speak(instructions);
+
+        // Cleanup function to stop speech when component unmounts
+        return () => {
+            Speech.stop();
+        };
     }, []);
 
     const handleStartBtn = () => {
+        // Stop the speech when navigating to another screen
+        Speech.stop();
         navigation.navigate('Menu');
     }
 

@@ -101,7 +101,7 @@ const App = () => {
         <Stack.Screen
           name="Quiz"
           component={QuizBrailleLetter}
-          options={{ headerShown: false }}
+          options={{ headerShown: true, title: 'Quiz Braille', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#B2beb5' } }}
         />
         <Stack.Screen
           name="LessonCategory"

@@ -44,7 +44,6 @@ const ASLScreen = ({ navigation, route }) => {
     const [imageUri, setImageUri] = useState();
     const [imageCaptured, setImageCaptured] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [responseDataArray, setResponseDataArray] = useState([]);
     const [feedback, setFeedback] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
