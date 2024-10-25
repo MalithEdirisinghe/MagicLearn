@@ -1,0 +1,352 @@
+// import React, { useEffect, useState } from 'react';
+// import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+// import Slider from '@react-native-community/slider';
+// import * as Speech from 'expo-speech';
+
+// const TextDetailScreen = ({ route, navigation }) => {
+//     const { text } = route.params;
+//     const [isSpeaking, setIsSpeaking] = useState(false);
+//     const [speechRate, setSpeechRate] = useState(1.0); // State to store speech speed
+
+//     // Automatically start reading the text when the screen opens
+//     useEffect(() => {
+//         handlePlay();
+//         return () => {
+//             Speech.stop();
+//         };
+//     }, []);
+
+//     // Handle Play button press
+//     const handlePlay = () => {
+//         if (text) {
+//             Speech.speak(text, {
+//                 rate: speechRate,
+//                 onStart: () => setIsSpeaking(true),
+//                 onDone: () => setIsSpeaking(false),
+//             });
+//         }
+//     };
+
+//     // Handle Pause button press
+//     const handlePause = () => {
+//         Speech.stop();
+//         setIsSpeaking(false);
+//     };
+
+//     // Handle speech speed change
+//     const handleSpeechRateChange = (value) => {
+//         setSpeechRate(value);
+//         if (isSpeaking) {
+//             // Restart speech with the new rate
+//             Speech.stop();
+//             Speech.speak(text, { rate: value });
+//         }
+//     };
+
+//     return (
+//         <View style={styles.container}>
+//             <Text style={styles.title}>Text Details</Text>
+//             <View style={styles.textContainer}>
+//                 <Text style={styles.detailText}>{text}</Text>
+//             </View>
+
+//             {/* Slider for controlling speech speed */}
+//             <View style={styles.sliderContainer}>
+//                 <Text style={styles.sliderLabel}>Speech Speed: {speechRate.toFixed(1)}x</Text>
+//                 <Slider
+//                     style={styles.slider}
+//                     minimumValue={0.5}
+//                     maximumValue={2.0}
+//                     value={speechRate}
+//                     onValueChange={handleSpeechRateChange}
+//                     minimumTrackTintColor="#FFA500"
+//                     maximumTrackTintColor="#000"
+//                     thumbTintColor="#FFA500"
+//                     step={0.1}
+//                 />
+//             </View>
+
+//             {/* Play and Pause buttons */}
+//             <View style={styles.buttonContainer}>
+//                 {isSpeaking ? (
+//                     <TouchableOpacity style={styles.pauseButton} onPress={handlePause}>
+//                         <Text style={styles.buttonText}>Pause</Text>
+//                     </TouchableOpacity>
+//                 ) : (
+//                     <TouchableOpacity style={styles.playButton} onPress={handlePlay}>
+//                         <Text style={styles.buttonText}>Play</Text>
+//                     </TouchableOpacity>
+//                 )}
+//             </View>
+
+//             <TouchableOpacity
+//                 style={styles.backButton}
+//                 onPress={() => {
+//                     Speech.stop();
+//                     navigation.goBack();
+//                 }}
+//             >
+//                 <Text style={styles.backButtonText}>Back</Text>
+//             </TouchableOpacity>
+//         </View>
+//     );
+// };
+
+// const styles = StyleSheet.create({
+//     container: {
+//         flex: 1,
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//         padding: 20,
+//         backgroundColor: '#6A5AE0',
+//     },
+//     title: {
+//         fontSize: 24,
+//         fontWeight: 'bold',
+//         color: '#FFF',
+//         marginBottom: 20,
+//     },
+//     textContainer: {
+//         width: '100%',
+//         padding: 20,
+//         backgroundColor: '#FFF',
+//         borderRadius: 15,
+//         marginBottom: 20,
+//     },
+//     detailText: {
+//         fontSize: 16,
+//         color: '#000',
+//     },
+//     sliderContainer: {
+//         width: '100%',
+//         alignItems: 'center',
+//         marginVertical: 20,
+//     },
+//     sliderLabel: {
+//         fontSize: 16,
+//         fontWeight: 'bold',
+//         color: '#FFF',
+//         marginBottom: 5,
+//     },
+//     slider: {
+//         width: '90%',
+//         height: 40,
+//     },
+//     buttonContainer: {
+//         flexDirection: 'row',
+//         justifyContent: 'center',
+//         marginBottom: 20,
+//     },
+//     playButton: {
+//         paddingVertical: 15,
+//         paddingHorizontal: 30,
+//         backgroundColor: '#32CD32',
+//         borderRadius: 20,
+//         alignItems: 'center',
+//         marginRight: 10,
+//     },
+//     pauseButton: {
+//         paddingVertical: 15,
+//         paddingHorizontal: 30,
+//         backgroundColor: '#FF0000',
+//         borderRadius: 20,
+//         alignItems: 'center',
+//         marginRight: 10,
+//     },
+//     buttonText: {
+//         color: '#FFF',
+//         fontSize: 18,
+//         fontWeight: 'bold',
+//     },
+//     backButton: {
+//         paddingVertical: 15,
+//         paddingHorizontal: 30,
+//         backgroundColor: '#FFA500',
+//         borderRadius: 20,
+//         alignItems: 'center',
+//     },
+//     backButtonText: {
+//         color: '#FFF',
+//         fontSize: 18,
+//         fontWeight: 'bold',
+//     },
+// });
+
+// export default TextDetailScreen;
+
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Slider from '@react-native-community/slider';
+import * as Speech from 'expo-speech';
+
+const TextDetailScreen = ({ route, navigation }) => {
+    const { text, topic } = route.params; // Get the topic from the params
+    const [isSpeaking, setIsSpeaking] = useState(false);
+    const [speechRate, setSpeechRate] = useState(1.0); // State to store speech speed
+
+    // Automatically start reading the text when the screen opens
+    useEffect(() => {
+        handlePlay();
+        return () => {
+            Speech.stop();
+        };
+    }, []);
+
+    // Handle Play button press
+    const handlePlay = () => {
+        if (text) {
+            Speech.speak(text, {
+                rate: speechRate,
+                onStart: () => setIsSpeaking(true),
+                onDone: () => setIsSpeaking(false),
+            });
+        }
+    };
+
+    // Handle Pause button press
+    const handlePause = () => {
+        Speech.stop();
+        setIsSpeaking(false);
+    };
+
+    // Handle speech speed change
+    const handleSpeechRateChange = (value) => {
+        setSpeechRate(value);
+        if (isSpeaking) {
+            // Restart speech with the new rate
+            Speech.stop();
+            Speech.speak(text, { rate: value });
+        }
+    };
+
+    return (
+        <View style={styles.container}>
+            {/* Display topic as the title */}
+            <Text style={styles.title}>{topic}</Text>
+            <View style={styles.textContainer}>
+                <Text style={styles.detailText}>{text}</Text>
+            </View>
+
+            {/* Slider for controlling speech speed */}
+            <View style={styles.sliderContainer}>
+                <Text style={styles.sliderLabel}>Speech Speed: {speechRate.toFixed(1)}x</Text>
+                <Slider
+                    style={styles.slider}
+                    minimumValue={0.5}
+                    maximumValue={2.0}
+                    value={speechRate}
+                    onValueChange={handleSpeechRateChange}
+                    minimumTrackTintColor="#FFA500"
+                    maximumTrackTintColor="#000"
+                    thumbTintColor="#FFA500"
+                    step={0.1}
+                />
+            </View>
+
+            {/* Play and Pause buttons */}
+            <View style={styles.buttonContainer}>
+                {isSpeaking ? (
+                    <TouchableOpacity style={styles.pauseButton} onPress={handlePause}>
+                        <Text style={styles.buttonText}>Pause</Text>
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity style={styles.playButton} onPress={handlePlay}>
+                        <Text style={styles.buttonText}>Play</Text>
+                    </TouchableOpacity>
+                )}
+            </View>
+
+            <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => {
+                    Speech.stop();
+                    navigation.goBack();
+                }}
+            >
+                <Text style={styles.backButtonText}>Back</Text>
+            </TouchableOpacity>
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        backgroundColor: '#6A5AE0',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#FFF',
+        marginBottom: 20,
+    },
+    textContainer: {
+        width: '100%',
+        padding: 20,
+        backgroundColor: '#FFF',
+        borderRadius: 15,
+        marginBottom: 20,
+    },
+    detailText: {
+        fontSize: 16,
+        color: '#000',
+    },
+    sliderContainer: {
+        width: '100%',
+        alignItems: 'center',
+        marginVertical: 20,
+    },
+    sliderLabel: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#FFF',
+        marginBottom: 5,
+    },
+    slider: {
+        width: '90%',
+        height: 40,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginBottom: 20,
+    },
+    playButton: {
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        backgroundColor: '#32CD32',
+        borderRadius: 20,
+        alignItems: 'center',
+        marginRight: 10,
+    },
+    pauseButton: {
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        backgroundColor: '#FF0000',
+        borderRadius: 20,
+        alignItems: 'center',
+        marginRight: 10,
+    },
+    buttonText: {
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    backButton: {
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        backgroundColor: '#FFA500',
+        borderRadius: 20,
+        alignItems: 'center',
+    },
+    backButtonText: {
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+});
+
+export default TextDetailScreen;

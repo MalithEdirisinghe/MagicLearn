@@ -23,6 +23,10 @@ const CaptureLearn = () => {
         }
     };
 
+    const handleViewSavedText = () => {
+        navigation.navigate('SavedText');
+    };
+
     // Use useEffect to set the greeting when the component mounts
     useEffect(() => {
         const currentGreeting = getGreeting();
@@ -68,7 +72,7 @@ const CaptureLearn = () => {
                     <MaterialIcons name="chevron-right" size={24} color="#4A4A4A" />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.optionButton} onPress={() => alert('Do a Previous Lesson Pressed')}>
+                <TouchableOpacity style={styles.optionButton} onPress={handleViewSavedText}>
                     <View style={styles.optionContent}>
                         <Icon name="book" size={24} color="#4A4A4A" />
                         <Text style={styles.optionText}>Do a previous lesson</Text>

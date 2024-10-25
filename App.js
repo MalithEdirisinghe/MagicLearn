@@ -31,7 +31,10 @@ import QuizScreen from './screens/QuizScreen';
 import SignWordScreen from './screens/SignWordScreen';
 import ASLInstructionScreen from './screens/ASLInstructionScreen';
 import SignWordRangeScreen from './screens/SignWordRangeScreen';
+import SavedTextScreen from './screens/SavedTextScreen';
+import TextDetailScreen from './screens/TextDetailScreen';
 import Toast from 'react-native-toast-message';
+import { MenuProvider } from 'react-native-popup-menu';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +44,7 @@ const ToastContainer = React.forwardRef((props, ref) => (
 
 const App = () => {
   return (
+    <MenuProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
@@ -124,6 +128,16 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="SavedText"
+          component={SavedTextScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="TextDetail"
+          component={TextDetailScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="SignWordScreen"
           component={SignWordScreen}
           options={{ headerShown: true, title: '', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#5B3CBB' } }}
@@ -189,6 +203,7 @@ const App = () => {
       </Stack.Navigator>
       <ToastContainer />
     </NavigationContainer>
+    </MenuProvider>
   );
 };
 

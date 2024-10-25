@@ -119,8 +119,8 @@ const GifWordScreen = () => {
                 const currentGifName = questionsForCurrentLevel[currentGifIndex].name;
                 const apiResponse = responseData.predicted_class;
 
-                // if (currentGifName === apiResponse) {
-                if (currentGifName === currentGifName) {
+                if (currentGifName === apiResponse) {
+                // if (currentGifName === currentGifName) {
                     setShowCorrectModal(true);
                     setShowIncorrectModal(false);
                 } else {
