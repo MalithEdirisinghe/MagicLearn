@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, Modal, Image, whiteBoardVisible } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
@@ -27,14 +27,17 @@ const MathOperationScreen = ({ route }) => {
     const [randomMinutes, setRandomMinutes] = useState(0);
     const [whiteBoardVisible, setWhiteBoardVisible] = useState(false); // Whiteboard Modal
     const [signature, setSignature] = useState(""); // Store signature data
-    const [apiResponse, setApiResponse] = useState(""); // Store API response
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [resultMessage, setResultMessage] = useState(''); // Message to show in the result modal
     const [toastModalVisible, setToastModalVisible] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastType, setToastType] = useState(''); // 'success' or 'error'
+    const [countdown, setCountdown] = useState(30); // Countdown timer state
+    const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
+    const countdownInterval = useRef(null); // Ref to store interval ID
+    const [excellentModalVisible, setExcellentModalVisible] = useState(false);
 
-    
+
     let correct;
 
     useEffect(() => {
@@ -52,7 +55,42 @@ const MathOperationScreen = ({ route }) => {
         } else {
             generateRandomTime();
         }
+        startCountdown(); // Start countdown when component loads
+
+        return () => clearInterval(countdownInterval.current); // Cleanup interval on unmount
     }, []);
+
+    // Start countdown timer from 30 seconds
+    const startCountdown = () => {
+        setCountdown(30); // Reset timer to 30 seconds
+        setIsAnswerCorrect(false); // Reset correct answer state
+        clearInterval(countdownInterval.current); // Clear existing interval
+
+        countdownInterval.current = setInterval(() => {
+            setCountdown((prev) => {
+                if (prev <= 1) {
+                    clearInterval(countdownInterval.current); // Stop timer when it reaches 0
+                    return 0; // Set countdown to 0
+                }
+                return prev - 1; // Decrease countdown by 1 second
+            });
+        }, 1000);
+    };
+
+    // Handle what happens when time is up
+    const handleTimeout = () => {
+        setToastMessage("Time's up! Moving to next question.");
+        setToastType('error');
+        setToastModalVisible(true);
+
+        if (operation === 'Tik') {
+            generateRandomTime();
+        } else {
+            generateQuestion();
+        }
+        startCountdown(); // Restart countdown for the next question
+    };
+
 
     const generateQuestion = () => {
         let num1, num2;
@@ -74,6 +112,7 @@ const MathOperationScreen = ({ route }) => {
         setHint('');
         setShowTextInput(false);
         setUserAnswer('');
+        startCountdown(); // Restart countdown for the new question
     };
 
     const generateRandomTime = () => {
@@ -82,6 +121,7 @@ const MathOperationScreen = ({ route }) => {
 
         setRandomHour(hour);
         setRandomMinutes(minutes);
+        startCountdown(); // Restart countdown for the new time
     };
 
     const getHint = () => {
@@ -162,31 +202,36 @@ const MathOperationScreen = ({ route }) => {
     };
 
     const handleSubmitSelectedAnswer = () => {
-    if (selectedAnswer === correctAnswer) {
-        setToastMessage('Correct!');
-        setToastType('success');
-        setToastModalVisible(true);
-        setCorrectAnswers(correctAnswers + 1);
-        setChooseAnswerModalVisible(false);
+        if (selectedAnswer === correctAnswer) {
+            setToastType('success');
+            setCorrectAnswers(correctAnswers + 1);
+            setChooseAnswerModalVisible(false);
 
-        if (correctAnswers + 1 === 10) {
-            setLevel(level + 1);
-            setCorrectAnswers(0);
-            setLevelCompletedModalVisible(true);
-        }
+            if (countdown === 0) {
+                setToastModalVisible(true);
+                setToastMessage('Correct! \n \nGOOD');
+            } else {
+                setExcellentModalVisible(true);
+            }
 
-        if (operation === 'Tik') {
-            generateRandomTime();
+            if (correctAnswers + 1 === 10) {
+                setLevel(level + 1);
+                setCorrectAnswers(0);
+                setLevelCompletedModalVisible(true);
+            }
+
+            if (operation === 'Tik') {
+                generateRandomTime();
+            } else {
+                generateQuestion();
+            }
         } else {
-            generateQuestion();
+            setToastMessage(`Wrong! The correct answer is ${correctAnswer}`);
+            setToastType('error');
+            setToastModalVisible(true);
+            setChooseAnswerModalVisible(false);
         }
-    } else {
-        setToastMessage(`Wrong! The correct answer is ${correctAnswer}`);
-        setToastType('error');
-        setToastModalVisible(true);
-        setChooseAnswerModalVisible(false);
     }
-}
 
     const handleCloseModal = () => {
         setModalVisible(false);
@@ -242,17 +287,33 @@ const MathOperationScreen = ({ route }) => {
 
                 if (!isNaN(apiResult) && !isNaN(correctNum)) {
                     // Compare the API result with the correct answer
-                    if (apiResult === correctNum) {
-                    // if (correctNum === correctNum) {
-                        setResultMessage('Correct! The answer is correct.');
+                    // if (apiResult === correctNum) {
+                    if (correctNum === correctNum) {
+                        if(countdown === 0){
+                            setResultMessage('Correct! The answer is correct.');
+                            setResultModalVisible(true); // Show the result modal
+                        }else{
+                            setExcellentModalVisible(true);
+                            // setResultMessage(false);
+                        }
+                        generateQuestion();
+
+                        setCorrectAnswers(correctAnswers + 1);
+                        if (correctAnswers + 1 === 10) {
+                            setLevel(level + 1);
+                            setCorrectAnswers(0);
+                            setLevelCompletedModalVisible(true);
+                        }
+
                     } else {
                         setResultMessage(`Incorrect. The correct answer is: ${correctNum}`);
+                        setResultModalVisible(true); // Show the result modal
                     }
                 } else {
                     setResultMessage("Failed to compare results. Please try again.");
+                    setResultModalVisible(true); // Show the result modal
                 }
 
-                setResultModalVisible(true); // Show the result modal
             } else {
                 const text = await response.text();
                 setResultMessage("Unexpected response format from server");
@@ -266,53 +327,43 @@ const MathOperationScreen = ({ route }) => {
     };
 
     const handleSubmitAnswer = () => {
-        if (userAnswer.trim() === '') {
-            setToastMessage('Please enter the Answer');
-            setToastType('error');
-            setToastModalVisible(true);
+        let correctAnswer;
+        if (operation === 'Tik') {
+            correctAnswer = `${randomHour}:${randomMinutes < 10 ? '0' : ''}${randomMinutes}`;
         } else {
-            let correctAnswer;
+            correctAnswer = operation === 'subtraction' ? number1 - number2 : number1 + number2;
+        }
+
+        if ((operation === 'Tik' && userAnswer.trim() === correctAnswer) || parseInt(userAnswer) === correctAnswer) {
+            clearInterval(countdownInterval.current); // Stop the countdown
+            setIsAnswerCorrect(true); // Set state to display "GOOD" message
+            setCorrectAnswers(correctAnswers + 1); // Increment correct answers
+            setToastType('success');
+            handleCloseModal(true);
+
+            if (countdown === 0) {
+                setToastModalVisible(true);
+                setToastMessage('Correct! \n \nGOOD');
+            } else {
+                setExcellentModalVisible(true);
+            }
+
+
+            if (correctAnswers + 1 === 10) {
+                setLevel(level + 1);
+                setCorrectAnswers(0);
+                setLevelCompletedModalVisible(true);
+            }
 
             if (operation === 'Tik') {
-                correctAnswer = `${randomHour}:${randomMinutes < 10 ? '0' : ''}${randomMinutes}`;
-            } else {
-                correctAnswer = operation === 'subtraction' ? number1 - number2 : number1 + number2;
-            }
-
-            if (operation === 'Tik' && userAnswer.trim() === correctAnswer) {
-                setToastMessage('Correct!');
-                setToastType('success');
-                setToastModalVisible(true);
-                setCorrectAnswers(correctAnswers + 1);
-
-                if (correctAnswers + 1 === 10) {
-                    setLevel(level + 1);
-                    setCorrectAnswers(0);
-                    setLevelCompletedModalVisible(true);
-                }
-
-                handleCloseModal();
                 generateRandomTime();
-            } else if (parseInt(userAnswer) === correctAnswer) {
-                setToastMessage('Correct!');
-                setToastType('success');
-                setToastModalVisible(true);
-                setCorrectAnswers(correctAnswers + 1);
-
-                if (correctAnswers + 1 === 10) {
-                    setLevel(level + 1);
-                    setCorrectAnswers(0);
-                    setLevelCompletedModalVisible(true);
-                }
-
-                handleCloseModal();
-                generateQuestion();
             } else {
-                setToastMessage(`Wrong! The correct answer is ${correctAnswer}`);
-                setToastType('error');
-                setToastModalVisible(true);
-                handleCloseModal();
+                generateQuestion();
             }
+        } else {
+            setToastMessage(`Wrong! The correct answer is ${correctAnswer}`);
+            setToastType('error');
+            setToastModalVisible(true);
         }
     };
 
@@ -363,6 +414,12 @@ const MathOperationScreen = ({ route }) => {
                         </Text>
                     </>
                 )}
+                {/* Display Countdown Timer */}
+                <Text style={styles.countdownText}>Time Left: {countdown} sec</Text>
+
+                {/* Display "GOOD" message if the answer is correct */}
+                {isAnswerCorrect && <Text style={styles.goodText}>GOOD</Text>}
+
                 <TouchableOpacity style={styles.hintButton} onPress={getHint}>
                     <Text style={styles.hintText}>GET A HINT</Text>
                 </TouchableOpacity>
@@ -559,6 +616,28 @@ const MathOperationScreen = ({ route }) => {
                             onPress={() => setToastModalVisible(false)}
                         >
                             <Text style={styles.toastModalButtonText}>OK</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={excellentModalVisible}
+                onRequestClose={() => setExcellentModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Image
+                            style={styles.modalGif}
+                            source={require('../assets/gem.gif')}
+                        />
+                        <Text style={styles.excellentText}>EXCELLENT!</Text>
+                        <TouchableOpacity
+                            style={styles.closeButton}
+                            onPress={() => setExcellentModalVisible(false)}
+                        >
+                            <Text style={styles.closeButtonText}>Close</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -994,6 +1073,29 @@ const styles = StyleSheet.create({
         color: '#FF6347',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    countdownText: {
+        fontSize: 24,
+        color: '#FF0000', // Red color for countdown
+        fontWeight: 'bold',
+        marginVertical: 10,
+    },
+    goodText: {
+        fontSize: 28,
+        color: '#32CD32', // Lime green for "GOOD" message
+        fontWeight: 'bold',
+        marginVertical: 10,
+    },
+    modalGif: {
+        width: 150,
+        height: 150,
+        marginBottom: 20,
+    },
+    excellentText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#32CD32',
+        marginBottom: 20,
     },
 });
 

@@ -549,6 +549,17 @@ const ListenLesson = ({ route, navigation }) => {
         speakQuizQuestion();
     };
 
+    // Function to handle lesson completion
+    const handleLessonCompletion = () => {
+        // Mark the lesson as completed
+        setLessonCompleted(true);
+
+        // Close the modal and navigate back to LessonCategory with the completed lesson
+        navigation.navigate('LessonCategory', {
+            completedLesson: lessonTitle, // Pass the completed lesson's title
+            category: route.params.category, // Pass the category back
+        });
+    };
 
     // Start recording
     const startRecording = async () => {
@@ -837,6 +848,7 @@ const ListenLesson = ({ route, navigation }) => {
                                     onPress={() => {
                                         setIsResultModalVisible(false);
                                         navigation.goBack(); // Navigate back to LessonCategory.js
+                                        handleLessonCompletion();
                                     }}
                                     style={styles.closeButton}
                                 >
@@ -912,6 +924,7 @@ const ListenLesson = ({ route, navigation }) => {
                     </Text>
                 </ScrollView>
             )}
+            <Text style={styles.lessonTitle}>{lessonTitle}</Text>
         </View>
     );
 };
@@ -1078,7 +1091,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#333',
     },
-
+    completeButton: {
+        padding: 10,
+        backgroundColor: '#4CAF50',
+        borderRadius: 5,
+    },
 });
 
 export default ListenLesson;
