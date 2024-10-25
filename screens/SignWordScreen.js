@@ -139,8 +139,8 @@ const SignWordScreen = ({ route, navigation }) => {
                 const { percentage, result } = data;
 
                 // Check if the result matches the current word
-                // if (currentWord.toLowerCase() === result.toLowerCase()) {
-                if (currentWord.toLowerCase() === currentWord.toLowerCase()) {
+                if (currentWord.toLowerCase() === result.toLowerCase()) {
+                // if (currentWord.toLowerCase() === currentWord.toLowerCase()) {
                     setFeedbackMessage(`Your answer is correct!\nPredicted: ${result}\nConfidence: ${percentage}`);
                     setIsCorrect(true);
                     setIsIncorrect(false);

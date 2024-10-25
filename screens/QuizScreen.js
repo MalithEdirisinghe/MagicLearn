@@ -1,5 +1,5 @@
 // import React, { useState, useEffect } from 'react';
-// import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Modal } from 'react-native';
+// import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native';
 // import { Audio } from 'expo-av';
 // import { FontAwesome } from 'react-native-vector-icons';
 // import * as Speech from 'expo-speech';
@@ -14,8 +14,8 @@
 //     const [nounsRecordedUri, setNounsRecordedUri] = useState(null);
 //     const [verbsRecordedUri, setVerbsRecordedUri] = useState(null);
 //     const [sound, setSound] = useState(null);
-//     const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
-//     const [apiResponse, setApiResponse] = useState(null); // State to store API response
+//     const [modalVisible, setModalVisible] = useState(false);
+//     const [apiResponse, setApiResponse] = useState(null);
 
 //     const questions = [
 //         'What are the Nouns of this lesson?',
@@ -30,10 +30,8 @@
 
 //     const startRecording = async () => {
 //         try {
-//             console.log('Requesting permissions..');
 //             const permission = await Audio.requestPermissionsAsync();
 //             if (permission.status === 'granted') {
-//                 console.log('Starting recording..');
 //                 await Audio.setAudioModeAsync({
 //                     allowsRecordingIOS: true,
 //                     playsInSilentModeIOS: true,
@@ -43,7 +41,6 @@
 //                 await recording.startAsync();
 //                 setRecording(recording);
 //                 setIsRecording(true);
-//                 console.log('Recording started');
 //             } else {
 //                 console.log('Permission to record not granted');
 //             }
@@ -53,12 +50,10 @@
 //     };
 
 //     const stopRecording = async () => {
-//         console.log('Stopping recording..');
 //         setRecording(undefined);
 //         await recording.stopAndUnloadAsync();
 //         const uri = recording.getURI();
 //         setRecordedUri(uri);
-//         console.log('Recording stopped and stored at', uri);
 //         setIsRecording(false);
 
 //         if (currentQuestionIndex === 0) {
@@ -70,7 +65,6 @@
 
 //     const playRecording = async () => {
 //         if (recordedUri) {
-//             console.log('Playing recorded audio...');
 //             const { sound } = await Audio.Sound.createAsync({ uri: recordedUri });
 //             setSound(sound);
 //             await sound.playAsync();
@@ -114,11 +108,10 @@
 //             });
 
 //             const result = await response.json();
-//             console.log('API Response:', result);
 
 //             if (response.ok) {
-//                 setApiResponse(result); // Store API response
-//                 setModalVisible(true); // Show the modal
+//                 setApiResponse(result);
+//                 setModalVisible(true);
 //             } else {
 //                 Alert.alert('Error', result.error || 'Failed to submit recordings.');
 //             }
@@ -131,7 +124,6 @@
 //     useEffect(() => {
 //         return sound
 //             ? () => {
-//                 console.log('Unloading Sound');
 //                 sound.unloadAsync();
 //             }
 //             : undefined;
@@ -140,30 +132,6 @@
 //     return (
 //         <View style={styles.container}>
 //             <Text style={styles.questionText}>{questions[currentQuestionIndex]}</Text>
-
-//             <ScrollView style={styles.scrollContainer}>
-//                 {nouns && nouns.length > 0 && (
-//                     <View style={styles.dataContainer}>
-//                         <Text style={styles.dataTitle}>Nouns:</Text>
-//                         {nouns.map((noun, index) => (
-//                             <Text key={index} style={styles.dataItem}>
-//                                 {noun}
-//                             </Text>
-//                         ))}
-//                     </View>
-//                 )}
-
-//                 {verbs && verbs.length > 0 && (
-//                     <View style={styles.dataContainer}>
-//                         <Text style={styles.dataTitle}>Verbs:</Text>
-//                         {verbs.map((verb, index) => (
-//                             <Text key={index} style={styles.dataItem}>
-//                                 {verb}
-//                             </Text>
-//                         ))}
-//                     </View>
-//                 )}
-//             </ScrollView>
 
 //             <View style={styles.recordContainer}>
 //                 {!isRecording ? (
@@ -247,24 +215,6 @@
 //         fontWeight: 'bold',
 //         color: '#FFF',
 //         marginBottom: 20,
-//     },
-//     scrollContainer: {
-//         width: '100%',
-//         marginBottom: 20,
-//     },
-//     dataContainer: {
-//         paddingHorizontal: 20,
-//         marginVertical: 10,
-//     },
-//     dataTitle: {
-//         fontSize: 20,
-//         fontWeight: 'bold',
-//         color: '#FFF',
-//         marginBottom: 10,
-//     },
-//     dataItem: {
-//         fontSize: 18,
-//         color: '#FFF',
 //     },
 //     recordContainer: {
 //         marginTop: 30,
@@ -366,6 +316,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-na
 import { Audio } from 'expo-av';
 import { FontAwesome } from 'react-native-vector-icons';
 import * as Speech from 'expo-speech';
+import { LinearGradient } from 'expo-linear-gradient'; // Import LinearGradient for gradient background
 import { Base_url1 } from './baseUrl';
 
 const QuizScreen = ({ route }) => {
@@ -493,7 +444,10 @@ const QuizScreen = ({ route }) => {
     }, [sound]);
 
     return (
-        <View style={styles.container}>
+        <LinearGradient
+            colors={['#6A5AE0', '#8A2BE2']}
+            style={styles.container}
+        >
             <Text style={styles.questionText}>{questions[currentQuestionIndex]}</Text>
 
             <View style={styles.recordContainer}>
@@ -561,7 +515,7 @@ const QuizScreen = ({ route }) => {
                     </View>
                 </View>
             </Modal>
-        </View>
+        </LinearGradient>
     );
 };
 
@@ -570,14 +524,17 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#6A5AE0',
         padding: 20,
     },
     questionText: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: 'bold',
         color: '#FFF',
-        marginBottom: 20,
+        textAlign: 'center',
+        marginBottom: 30,
+        textShadowColor: '#000',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 5,
     },
     recordContainer: {
         marginTop: 30,
@@ -588,53 +545,71 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#FFA500',
         padding: 20,
-        borderRadius: 100,
+        borderRadius: 15,
         marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
     },
     stopButton: {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#FF0000',
         padding: 20,
-        borderRadius: 100,
+        borderRadius: 15,
         marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
     },
     playButton: {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#32CD32',
         padding: 20,
-        borderRadius: 100,
+        borderRadius: 15,
         marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
     },
     nextButton: {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#0000FF',
         padding: 20,
-        borderRadius: 100,
+        borderRadius: 15,
         marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
     },
     submitButton: {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#4B0082',
         padding: 20,
-        borderRadius: 100,
+        borderRadius: 15,
         marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
     },
     recordText: {
         color: '#FFF',
-        fontSize: 18,
+        fontSize: 20,
         marginTop: 10,
-    },
-    nextText: {
-        color: '#FFF',
-        fontSize: 18,
-    },
-    submitText: {
-        color: '#FFF',
-        fontSize: 18,
+        fontWeight: '600',
     },
     modalOverlay: {
         flex: 1,
@@ -650,13 +625,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalTitle: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: 'bold',
         marginBottom: 10,
+        color: '#4B0082',
     },
     modalText: {
-        fontSize: 18,
+        fontSize: 20,
         marginVertical: 5,
+        color: '#333',
     },
     closeButton: {
         marginTop: 20,

@@ -182,8 +182,8 @@ const ASLScreen = ({ navigation, route }) => {
                 // Check if the prediction is correct or incorrect
                 let newResult = {
                     letter: actualLetter,
-                    // isCorrect: predictedLetter === actualLetter
-                    isCorrect: actualLetter === actualLetter
+                    isCorrect: predictedLetter === actualLetter
+                    // isCorrect: actualLetter === actualLetter
                 };
 
                 if (newResult.isCorrect) {

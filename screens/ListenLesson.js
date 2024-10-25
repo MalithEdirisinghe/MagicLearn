@@ -708,8 +708,8 @@ const ListenLesson = ({ route, navigation }) => {
         console.log("Correct:", correctAnswer);
         console.log("User:", userAnswerLower);
 
-        // if (userAnswerLower === correctAnswer) {
-        if (correctAnswer === correctAnswer) {
+        if (userAnswerLower === correctAnswer) {
+        // if (correctAnswer === correctAnswer) {
             showModal('Correct! Your answer is correct');
             setCorrectAnswersCount(prevCount => prevCount + 1);
             Speech.speak('Your answer is correct');
