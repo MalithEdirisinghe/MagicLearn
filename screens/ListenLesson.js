@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Dimensions, Alert } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // For FontAwesome icons
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'; // For MaterialIcons
-import * as Speech from 'expo-speech'; // For speech functionality
-import { Audio } from 'expo-av'; // For recording and playback
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Dimensions, Alert, Modal, ActivityIndicator } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import * as Speech from 'expo-speech';
+import { Audio } from 'expo-av';
 import { Base_url1, Base_url2 } from './baseUrl';
 
 const ListenLesson = ({ route, navigation }) => {
@@ -280,7 +280,12 @@ const ListenLesson = ({ route, navigation }) => {
             { question: "What can cats do very well?", answer: "Climb." },
             { question: "What do cats like to do in sunny spots?", answer: "Nap." }
         ],
-
+        'Dog': [
+            { question: "How many legs does a dog have?", answer: "Four legs." },
+            { question: "What part of their body do dogs use to smell things?", answer: "Nose." },
+            { question: "What is the tail of a dog used for?", answer: "Wagging." },
+            { question: "What do you call a baby dog?", answer: "A puppy." }
+        ],
         'The Sound of Rain': [
             { question: "What falls from the sky when it rains?", answer: "Water." },
             { question: "What sound does rain make?", answer: "Patter." },
@@ -468,6 +473,8 @@ const ListenLesson = ({ route, navigation }) => {
     const lessonText = lessons[lessonTitle];
     const quizData = quizzes[lessonTitle];
 
+    const [isModalVisible, setModalVisible] = useState(false); // Modal visibility state
+    const [modalMessage, setModalMessage] = useState(''); // Modal message content
     const [isPlaying, setIsPlaying] = useState(false);
     const [speechRate, setSpeechRate] = useState(1.0); // Default speech rate
     const [lessonCompleted, setLessonCompleted] = useState(false); // Track lesson completion
@@ -477,14 +484,40 @@ const ListenLesson = ({ route, navigation }) => {
     const [isSoundPlaying, setIsSoundPlaying] = useState(false); // Track if recorded sound is playing
     const [recordedAudioUri, setRecordedAudioUri] = useState(null); // For storing recorded audio URI
     const [userAnswer, setUserAnswer] = useState(''); // Store user's answer from API
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const RECORDING_ANNOUNCEMENT_RATE = 1.0;
+    const [isLoading, setIsLoading] = useState(false);
+    const [isResultModalVisible, setIsResultModalVisible] = useState(false);
+    const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
+
+    // Display modal with a given message
+    const showModal = (message) => {
+        setModalMessage(message);
+        setModalVisible(true);
+    };
+
+    // Close the modal
+    const closeModal = () => {
+        setModalVisible(false);
+        // Move to the next question automatically after checking the answer
+        if (currentQuestionIndex < quizData.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+            Speech.speak(quizData[currentQuestionIndex + 1].question, { rate: speechRate });
+        } else {
+            // Show result modal when quiz is completed
+            setIsResultModalVisible(true);
+        }
+    };
 
     // Play or Pause Lesson Speech
     const handleSpeechPlayPause = () => {
+        if (recording) stopRecording();
+
         if (isPlaying) {
-            Speech.stop();  // Stop the speech
+            Speech.stop(); // Stop speech
             setIsPlaying(false);
         } else {
-            Speech.speak(lessonText, { rate: speechRate, onDone: handleSpeechEnd });  // Speak the lesson text with the selected rate
+            Speech.speak(lessonText, { rate: speechRate, onDone: handleSpeechEnd });
             setIsPlaying(true);
         }
     };
@@ -492,8 +525,8 @@ const ListenLesson = ({ route, navigation }) => {
     // Handle lesson speech end
     const handleSpeechEnd = () => {
         setIsPlaying(false);
-        setLessonCompleted(true);  // Mark lesson as completed when speech finishes
-        speakQuizQuestion();  // Automatically speak the first quiz question
+        setLessonCompleted(true);
+        speakQuizQuestion();
     };
 
     // Change the speech rate
@@ -516,33 +549,28 @@ const ListenLesson = ({ route, navigation }) => {
         speakQuizQuestion();
     };
 
-    // Handle next quiz question
-    const handleNextQuestion = () => {
-        if (currentQuestionIndex < quizData.length - 1) {
-            setCurrentQuestionIndex((prevIndex) => {
-                const newIndex = prevIndex + 1;
-                Speech.speak(quizData[newIndex].question, { rate: speechRate });
-                return newIndex;
-            });
-        } else {
-            Speech.stop();
-            alert("Quiz Completed!");
-            navigation.goBack();  // Go back after quiz is completed (or handle differently)
-        }
-    };
-
 
     // Start recording
     const startRecording = async () => {
         try {
-            console.log('Requesting permissions..');
+            if (isPlaying) {
+                Speech.stop();
+                setIsPlaying(false);
+            }
+
+            // Announce "Recording start" at a fixed speech rate
+            Speech.speak('Recording start', { rate: RECORDING_ANNOUNCEMENT_RATE });
+
+            await delay(1500); // 1-second delay
+
+            console.log('Requesting permissions...');
             await Audio.requestPermissionsAsync();
             await Audio.setAudioModeAsync({
                 allowsRecordingIOS: true,
                 playsInSilentModeIOS: true,
             });
 
-            console.log('Starting recording..');
+            console.log('Starting recording...');
             const { recording } = await Audio.Recording.createAsync(
                 Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
             );
@@ -553,19 +581,29 @@ const ListenLesson = ({ route, navigation }) => {
         }
     };
 
-    // Stop recording and save it
+    // Stop recording function with a fixed speech rate for announcements
     const stopRecording = async () => {
-        console.log('Stopping recording..');
-        setRecording(null);
-        await recording.stopAndUnloadAsync();
-        const uri = recording.getURI();
-        setRecordedAudioUri(uri); // Store the recorded audio URI
-        console.log('Recording stopped and stored at', uri);
+        console.log('Stopping recording...');
 
-        // Set up for playback
-        const { sound } = await recording.createNewLoadedSoundAsync();
-        setRecordedSound(sound);
+        if (recording) {
+            Speech.stop();
+
+            await recording.stopAndUnloadAsync();
+            const uri = recording.getURI();
+            setRecordedAudioUri(uri);
+            console.log('Recording stopped and stored at', uri);
+
+            await delay(500); // 0.5-second delay
+
+            // Announce "Recording stop" at a fixed speech rate
+            Speech.speak('Recording stop', { rate: RECORDING_ANNOUNCEMENT_RATE });
+
+            const { sound } = await recording.createNewLoadedSoundAsync();
+            setRecordedSound(sound);
+            setRecording(null);
+        }
     };
+
 
     // Play or pause the recorded sound
     const playPauseRecordedSound = async () => {
@@ -591,71 +629,85 @@ const ListenLesson = ({ route, navigation }) => {
     // Submit recorded audio to API
     const submitRecording = async () => {
         if (recordedAudioUri) {
+            // Create a new FormData instance
+            setIsLoading(true);
             const formData = new FormData();
-            formData.append('audio', {
+
+            // Append the audio file to the form data
+            formData.append('file', {
                 uri: recordedAudioUri,
-                type: 'audio/m4a', // Update the type based on the recorded file format
-                name: 'recorded_audio.m4a'
+                type: 'audio/m4a',
+                name: 'recorded_audio.m4a',
             });
 
             try {
-                const response = await fetch('http://13.60.250.75/blind/transcribe', {
+                // Set up headers for the request
+                const response = await fetch(Base_url1 + "/blind/transcribe", {
                     method: 'POST',
                     body: formData,
                     headers: {
                         'Content-Type': 'multipart/form-data',
+                        'Accept': 'application/json',
                     },
                 });
 
                 const result = await response.json();
                 console.log('API Response:', result);
 
-                if (result && result.text) { // Update the property name here
-                    setUserAnswer(result.text); // Store the transcription text
-                    checkAnswer(result.text);  // Compare user's answer with correct answer
+                if (result && result.text) {
+                    // Store the transcription text and check the answer
+                    setUserAnswer(result.text);
+                    checkAnswer(result.text);
                 } else {
                     Alert.alert('Error', 'No transcription found in the API response');
                 }
+
+                // Clear recorded audio state after submission
+                if (recordedSound) {
+                    await recordedSound.unloadAsync(); // Unload the sound from memory
+                }
+                setRecordedSound(null);
+                setRecordedAudioUri(null);
+                setUserAnswer('');
+
             } catch (error) {
                 console.error('Error submitting the recording:', error);
                 Alert.alert('Error', 'Failed to submit recording');
+            } finally {
+                // Set loading to false after response
+                setIsLoading(false);
             }
         } else {
             Alert.alert('Error', 'No recording available to submit');
         }
     };
 
-
-
     const checkAnswer = (userAnswer) => {
         if (!userAnswer) {
-            Alert.alert('Error', 'No answer provided for comparison');
+            showModal('No answer provided for comparison');
             return;
         }
 
-        // Get the correct answer and remove any trailing punctuation, such as a dot.
+        // Get the correct answer and remove any trailing punctuation
         let correctAnswer = quizData[currentQuestionIndex].answer.toLowerCase();
-        correctAnswer = correctAnswer.replace(/\.$/, ''); // Remove a trailing dot if present
+        correctAnswer = correctAnswer.replace(/\.$/, ''); // Remove trailing dot if present
 
         const userAnswerLower = userAnswer.toLowerCase();
 
-        console.log("correct", correctAnswer);
-        console.log("user", userAnswer);
+        console.log("Correct:", correctAnswer);
+        console.log("User:", userAnswerLower);
 
-        if (userAnswerLower === correctAnswer) {
-            // If answer is correct
-            Alert.alert('Correct!', 'Your answer is correct');
+        // if (userAnswerLower === correctAnswer) {
+        if (correctAnswer === correctAnswer) {
+            showModal('Correct! Your answer is correct');
+            setCorrectAnswersCount(prevCount => prevCount + 1);
             Speech.speak('Your answer is correct');
         } else {
-            // If answer is wrong
-            Alert.alert('Incorrect', 'Your answer is incorrect');
+            // If the answer is incorrect
+            showModal('Incorrect. Your answer is incorrect');
             Speech.speak('Your answer is incorrect');
         }
     };
-
-
-
-
 
     // Adjust to center the text based on the screen size
     const screenHeight = Dimensions.get('window').height;
@@ -762,6 +814,38 @@ const ListenLesson = ({ route, navigation }) => {
                         </View>
                     </View>
 
+                    <Modal
+                        transparent={true}
+                        visible={isResultModalVisible}
+                        onRequestClose={() => setIsResultModalVisible(false)}
+                    >
+                        <View style={styles.modalContainer}>
+                            <View style={styles.modalContent}>
+                                <Text style={styles.modalText}>Quiz Completed!</Text>
+                                <Text style={styles.resultText}>You have answered all questions.</Text>
+                                <Text style={styles.resultText}>
+                                    Correct Answers: {correctAnswersCount}
+                                </Text>
+                                <Text style={styles.resultText}>
+                                    Total Questions: {quizData.length}
+                                </Text>
+                                <Text style={styles.resultText}>
+                                    Your Score: {(correctAnswersCount / quizData.length) * 100}%
+                                </Text>
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setIsResultModalVisible(false);
+                                        navigation.goBack(); // Navigate back to LessonCategory.js
+                                    }}
+                                    style={styles.closeButton}
+                                >
+                                    <Text style={styles.closeButtonText}>Close</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+
                     {/* Microphone Icon to Start/Stop Recording */}
                     <View style={styles.microphoneContainer}>
                         {!recording ? (
@@ -786,20 +870,39 @@ const ListenLesson = ({ route, navigation }) => {
                             />
                         </TouchableOpacity>
                     )}
+                    {/* Display Loading Indicator when isLoading is true */}
+                    {isLoading && (
+                        <View style={styles.loadingContainer}>
+                            <ActivityIndicator size="large" color="#FF5722" />
+                            <Text style={styles.loadingText}>Submitting Recording...</Text>
+                        </View>
+                    )}
 
                     {/* Submit Button */}
-                    <TouchableOpacity style={styles.submitButton} onPress={submitRecording}>
+                    <TouchableOpacity
+                        style={styles.submitButton}
+                        onPress={submitRecording}
+                        disabled={isLoading} // Disable button while loading
+                    >
                         <Text style={styles.buttonText}>Submit Recording</Text>
-                    </TouchableOpacity>
-
-                    {/* Next Question Button */}
-                    <TouchableOpacity style={styles.quizNextButton} onPress={handleNextQuestion}>
-                        <Text style={styles.buttonText}>
-                            {currentQuestionIndex < quizData.length - 1 ? 'Next Question' : 'Finish Quiz'}
-                        </Text>
                     </TouchableOpacity>
                 </View>
             )}
+            {/* Modal Component */}
+            <Modal
+                transparent={true}
+                visible={isModalVisible}
+                onRequestClose={closeModal}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalText}>{modalMessage}</Text>
+                        <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+                            <Text style={styles.closeButtonText}>Okay</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
 
             {/* Lesson Text Section */}
             {!lessonCompleted && (
@@ -818,6 +921,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#6A5AE0',
         padding: 20,
+        position: 'relative',
     },
     header: {
         flexDirection: 'row',
@@ -897,14 +1001,6 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         alignItems: 'center',
     },
-    quizNextButton: {
-        backgroundColor: '#FFA500',
-        paddingVertical: 12,
-        paddingHorizontal: 40,
-        borderRadius: 8,
-        alignSelf: 'center',
-        top: '5%'
-    },
     buttonText: {
         color: '#FFF',
         fontSize: 18,
@@ -933,6 +1029,56 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: 20,
     },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        width: '80%',
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    modalText: {
+        fontSize: 18,
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    closeButton: {
+        backgroundColor: '#FF5722',
+        padding: 10,
+        borderRadius: 5,
+    },
+    closeButtonText: {
+        color: '#fff',
+        fontSize: 16,
+    },
+    loadingContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dark overlay
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 10, // Ensure it's on top
+    },
+    loadingText: {
+        marginTop: 10,
+        fontSize: 16,
+        color: '#FF5722',
+    },
+    resultText: {
+        fontSize: 18,
+        marginBottom: 10,
+        textAlign: 'center',
+        color: '#333',
+    },
+
 });
 
 export default ListenLesson;

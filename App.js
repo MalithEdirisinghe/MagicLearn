@@ -186,11 +186,6 @@ const App = () => {
           component={MuteGifScreen}
           options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
         />
-        {/* <Stack.Screen
-          name="GifWord"
-          component={GifWordScreen}
-          options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
-        /> */}
       </Stack.Navigator>
       <ToastContainer />
     </NavigationContainer>

@@ -478,7 +478,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 1,
-    }, loadingOverlay: {
+    }, 
+    loadingOverlay: {
         position: 'absolute',
         top: 0,
         left: 0,
