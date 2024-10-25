@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, Platform, Alert, Activ
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Base_url1 } from './baseUrl'
 
 import AImage from '../assets/ASL_Alphabet/A.jpg';
 import BImage from '../assets/ASL_Alphabet/B.jpg';
@@ -165,7 +166,7 @@ const ASLScreen = ({ navigation, route }) => {
                 type: 'image/jpg',
             });
 
-            const response = await fetch('http://51.21.134.249/sign/letter/predict', {
+            const response = await fetch(Base_url1 + "/sign/letter/predict", {
                 method: 'POST',
                 body: formData,
                 headers: {

@@ -71,9 +71,9 @@ const MuteHomeScreen = ({ navigation }) => {
                         <Text style={styles.modalTitle}>INSTRUCTIONS</Text>
                         <ScrollView contentContainerStyle={styles.modalBody}>
                             <Text style={styles.instructionsText}>
-                                Choose the first set of Alphabet, {"\n"}and use the app to teach.{"\n"}
-                                After completing the teaching part, {"\n"}let the child do the quiz.{"\n"}
-                                If the child gets more than 2 letters correct, {"\n"}they can go to the next set of letters.{"\n"}
+                                Choose the first set of Alphabet, and use the app to teach.
+                                After completing the teaching part, let the child do the quiz.
+                                If the child gets more than 2 letters correct, they can go to the next set of letters.
                                 If not, they have to learn again and re-do the quiz.
                             </Text>
                         </ScrollView>
@@ -96,10 +96,10 @@ const MuteHomeScreen = ({ navigation }) => {
                         <Text style={styles.modalTitle}>INSTRUCTIONS</Text>
                         <ScrollView contentContainerStyle={styles.modalBody}>
                             <Text style={styles.instructionsText1}>
-                                Choose a category, {"\n"}and then choose a word inside and learn.{"\n"}
-                                After learning, the child can attempt {"\n"}the quiz.{"\n"}
-                                The questions will be random, {"\n"}so there won’t be any order.{"\n"}
-                                If the child gets more than 75%,{"\n"}they can pass the quiz and move on to the {"\n"}next category.
+                                Choose a category, and then choose a word inside and learn.
+                                After learning, the child can attempt the quiz.
+                                The questions will be random, so there won’t be any order.
+                                If the child gets more than 75%, they can pass the quiz and move on to the next category.
                             </Text>
                         </ScrollView>
                         <TouchableOpacity style={styles.learnButton} onPress={handleNavigateLearnWord}>
@@ -198,24 +198,28 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     instructionsText: {
-        fontSize: 13,
+        fontSize: 20,
         color: '#fff',
         backgroundColor: '#1C3D99',
-        padding: 8,
+        padding: 15,
         borderRadius: 15,
         textAlign: 'center',
         width: '100%',
         alignSelf: 'center',
+        height: 300,
+        width: 300
     },
     instructionsText1: {
-        fontSize: 15,
+        fontSize: 20,
         color: '#fff',
         backgroundColor: '#1C3D99',
-        padding: 8,
+        padding: 15,
         borderRadius: 15,
         textAlign: 'center',
         width: '100%',
         alignSelf: 'center',
+        height: 300,
+        width: 300
     },
     learnButton: {
         backgroundColor: '#FF8C00',

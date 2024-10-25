@@ -4,6 +4,7 @@ import * as Speech from 'expo-speech';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Entypo } from '@expo/vector-icons';
+import { Base_url1 } from './baseUrl'
 
 const DisplayImageScreen = ({ route, navigation }) => {
     const { imageUri } = route.params;
@@ -33,7 +34,7 @@ const DisplayImageScreen = ({ route, navigation }) => {
 
         try {
             setLoading(true); // Start the loading spinner
-            const response = await fetch('http://13.60.250.75/blind/readText', {
+            const response = await fetch(Base_url1 + "/blind/readText", {
                 method: 'POST',
                 body: formData,
                 headers: {
