@@ -101,13 +101,18 @@ const DisplayImageScreen = ({ route, navigation }) => {
         }
 
         try {
-            const newEntry = { topic: topicName, text: extractedText };
+            const newEntry = {
+                topic: topicName,
+                text: extractedText,
+                nouns: nouns, // Save nouns
+                verbs: verbs  // Save verbs
+            };
 
             // Fetch the existing texts from AsyncStorage
             const existingTexts = await AsyncStorage.getItem('extractedTexts');
             let textsArray = existingTexts ? JSON.parse(existingTexts) : [];
 
-            // Add the new entry with topic name to the array
+            // Add the new entry with topic name, extracted text, nouns, and verbs to the array
             textsArray.push(newEntry);
 
             // Save the updated array to AsyncStorage
@@ -119,10 +124,10 @@ const DisplayImageScreen = ({ route, navigation }) => {
             console.error('Error saving text:', error);
             Alert.alert('Error', 'Failed to save text.');
         }
+
         setTopicModalVisible(false); // Close the topic input modal
         setIsOptionsModalVisible(false);
     };
-
 
     // Handle "Start the Quiz" button press
     const handleStartQuiz = () => {
