@@ -32,12 +32,22 @@ const SavedTextScreen = ({ navigation }) => {
                 rate: 1.0,
                 onDone: () => {
                     // Navigate to the detail screen after speech finishes
-                    navigation.navigate('TextDetail', { topic: textObj.topic, text: textObj.text });
+                    navigation.navigate('TextDetail', {
+                        topic: textObj.topic,
+                        text: textObj.text,
+                        nouns: textObj.nouns, // Pass nouns
+                        verbs: textObj.verbs  // Pass verbs
+                    });
                 }
             });
         } else {
             // Navigate immediately if topic is not available
-            navigation.navigate('TextDetail', { topic: 'Untitled', text: textObj.text });
+            navigation.navigate('TextDetail', {
+                topic: 'Untitled',
+                text: textObj.text,
+                nouns: textObj.nouns, // Pass nouns
+                verbs: textObj.verbs  // Pass verbs
+            });
         }
     };
 

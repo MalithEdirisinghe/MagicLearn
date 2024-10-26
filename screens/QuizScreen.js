@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, ActivityIndicator } from 'react-native';
 import { Audio } from 'expo-av';
 import { FontAwesome } from 'react-native-vector-icons';
 import * as Speech from 'expo-speech';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native'; // Import navigation hook
+import { useNavigation } from '@react-navigation/native';
 import { Base_url1 } from './baseUrl';
 
 const QuizScreen = ({ route }) => {
@@ -16,10 +16,12 @@ const QuizScreen = ({ route }) => {
     const [nounsRecordedUri, setNounsRecordedUri] = useState(null);
     const [verbsRecordedUri, setVerbsRecordedUri] = useState(null);
     const [sound, setSound] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [apiResponse, setApiResponse] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const navigation = useNavigation(); // Get navigation object
+    const navigation = useNavigation();
 
     const questions = [
         'What are the Nouns of this lesson?',
@@ -60,6 +62,7 @@ const QuizScreen = ({ route }) => {
         setRecordedUri(uri);
         setIsRecording(false);
 
+        // Store the recorded URI for nouns or verbs based on the question index
         if (currentQuestionIndex === 0) {
             setNounsRecordedUri(uri);
         } else {
@@ -68,17 +71,34 @@ const QuizScreen = ({ route }) => {
     };
 
     const playRecording = async () => {
+        if (sound) {
+            // Stop the playback if audio is currently playing
+            await sound.stopAsync();
+            setIsPlaying(false);
+            return;
+        }
+
         if (recordedUri) {
-            const { sound } = await Audio.Sound.createAsync({ uri: recordedUri });
-            setSound(sound);
-            await sound.playAsync();
+            const { sound: newSound } = await Audio.Sound.createAsync(
+                { uri: recordedUri },
+                { shouldPlay: true }
+            );
+            setSound(newSound);
+            setIsPlaying(true);
+
+            newSound.setOnPlaybackStatusUpdate((status) => {
+                if (!status.isPlaying) {
+                    setIsPlaying(false);
+                    setSound(null);
+                }
+            });
         }
     };
 
     const handleNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
-            setRecordedUri(null);
+            setRecordedUri(null); // Reset recorded URI to allow a new recording
         }
     };
 
@@ -87,6 +107,8 @@ const QuizScreen = ({ route }) => {
             Alert.alert('Error', 'Please record both nouns and verbs answers before submitting.');
             return;
         }
+
+        setIsLoading(true);
 
         const formData = new FormData();
         formData.append('nounsVoice', {
@@ -122,6 +144,8 @@ const QuizScreen = ({ route }) => {
         } catch (error) {
             console.error('Error submitting recordings:', error);
             Alert.alert('Error', 'Something went wrong while submitting the recordings.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -155,26 +179,35 @@ const QuizScreen = ({ route }) => {
             </View>
 
             {recordedUri && (
-                <>
-                    <View style={styles.recordContainer}>
-                        <TouchableOpacity style={styles.playButton} onPress={playRecording}>
-                            <FontAwesome name="play" size={60} color="#FFF" />
-                            <Text style={styles.recordText}>Play Recording</Text>
-                        </TouchableOpacity>
-                    </View>
+                <View style={styles.recordContainer}>
+                    <TouchableOpacity style={styles.playButton} onPress={playRecording}>
+                        <FontAwesome
+                            name={isPlaying ? 'stop' : 'play'} // Change icon based on playing state
+                            size={60}
+                            color="#FFF"
+                        />
+                        <Text style={styles.recordText}>
+                            {isPlaying ? 'Stop Recording' : 'Play Recording'}
+                        </Text>
+                    </TouchableOpacity>
 
-                    <View style={styles.recordContainer}>
-                        {currentQuestionIndex === 0 ? (
-                            <TouchableOpacity style={styles.nextButton} onPress={handleNextQuestion}>
-                                <Text style={styles.nextText}>Next Question</Text>
-                            </TouchableOpacity>
-                        ) : (
-                            <TouchableOpacity style={styles.submitButton} onPress={submitRecording}>
-                                <Text style={styles.submitText}>Submit Recording</Text>
-                            </TouchableOpacity>
-                        )}
-                    </View>
-                </>
+                    {currentQuestionIndex === 0 ? (
+                        <TouchableOpacity style={styles.nextButton} onPress={handleNextQuestion}>
+                            <Text style={styles.nextText}>Next Question</Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity style={styles.submitButton} onPress={submitRecording}>
+                                <Text style={styles.nextText}>Submit Recording</Text>
+                        </TouchableOpacity>
+                    )}
+                </View>
+            )}
+
+            {isLoading && (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color="#FFF" />
+                    <Text style={styles.loadingText}>Submitting...</Text>
+                </View>
             )}
 
             {/* Modal for displaying API response */}
@@ -200,7 +233,7 @@ const QuizScreen = ({ route }) => {
                             style={styles.closeButton}
                             onPress={() => {
                                 setModalVisible(false);
-                                navigation.navigate('CaptureLearn'); // Navigate to CaptureLearn.js
+                                navigation.navigate('CaptureLearn');
                             }}
                         >
                             <Text style={styles.closeButtonText}>Close</Text>
@@ -272,37 +305,21 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         elevation: 5,
     },
-    nextButton: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#0000FF',
-        padding: 20,
-        borderRadius: 15,
-        marginBottom: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    submitButton: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#4B0082',
-        padding: 20,
-        borderRadius: 15,
-        marginBottom: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
-        elevation: 5,
-    },
     recordText: {
         color: '#FFF',
         fontSize: 20,
         marginTop: 10,
         fontWeight: '600',
+    },
+    loadingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    loadingText: {
+        marginLeft: 10,
+        fontSize: 18,
+        color: '#FFF',
     },
     modalOverlay: {
         flex: 1,
@@ -339,6 +356,37 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    nextButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#0000FF',
+        padding: 20,
+        borderRadius: 15,
+        marginTop: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
+    },
+    nextText: {
+        color: '#FFF',
+        fontSize: 20,
+        fontWeight: '600',
+    },
+    submitButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#4B0082',
+        padding: 20,
+        borderRadius: 15,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
     },
 });
 

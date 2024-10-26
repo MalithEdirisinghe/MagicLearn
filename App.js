@@ -11,7 +11,7 @@ import HomeScreen from './screens/HomeScreen';
 import BlindHomeScreen from './screens/BlindHomeScreen';
 import BlindLesQuizScreen from './screens/BlindLesQuizScreen';
 import LessonCategoryScreen from './screens/LessonCategoryScreen';
-import BlindLessonScreen from './screens/BlindLessonScreen';
+// import BlindLessonScreen from './screens/BlindLessonScreen';
 import MuteHomeScreen from './screens/MuteHomeScreen';
 import LearnSignLanguageScreen from './screens/LearnSignLanguageScreen';
 import ASLScreen from './screens/ASLScreen';
@@ -170,11 +170,11 @@ const App = () => {
           component={LessonCategoryScreen}
           options={{ title: 'Category', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Lesson"
           component={BlindLessonScreen}
           options={{ title: 'Select Category', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
-        />
+        /> */}
         <Stack.Screen
           name="MuteHome"
           component={MuteHomeScreen}
