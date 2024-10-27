@@ -240,7 +240,7 @@ const ListenLesson = ({ route, navigation }) => {
             { question: "What do parrots use to eat seeds and fruits?", answer: "Beak." },
             { question: "How many legs does a parrot have?", answer: "Two." },
             { question: "What can parrots do that is special?", answer: "Talk." },
-            { question: "What colors can parrots have?", answer: "Green, red, blue." }
+            { question: "What colors can parrots have?", answer: "Green red blue." }
         ],
 
         'Chicken': [
@@ -498,6 +498,7 @@ const ListenLesson = ({ route, navigation }) => {
 
     // Close the modal
     const closeModal = () => {
+        Speech.speak("Okay");
         setModalVisible(false);
         // Move to the next question automatically after checking the answer
         if (currentQuestionIndex < quizData.length - 1) {
@@ -511,10 +512,12 @@ const ListenLesson = ({ route, navigation }) => {
 
     // Play or Pause Lesson Speech
     const handleSpeechPlayPause = () => {
+        Speech.speak("lesson speech started. please listen");
         if (recording) stopRecording();
 
         if (isPlaying) {
             Speech.stop(); // Stop speech
+            Speech.speak("lesson speech stopped");
             setIsPlaying(false);
         } else {
             Speech.speak(lessonText, { rate: speechRate, onDone: handleSpeechEnd });
@@ -639,6 +642,7 @@ const ListenLesson = ({ route, navigation }) => {
 
     // Submit recorded audio to API
     const submitRecording = async () => {
+        Speech.speak("Submit recording");
         if (recordedAudioUri) {
             // Create a new FormData instance
             setIsLoading(true);
@@ -670,7 +674,9 @@ const ListenLesson = ({ route, navigation }) => {
                     setUserAnswer(result.text);
                     checkAnswer(result.text);
                 } else {
-                    Alert.alert('Error', 'No transcription found in the API response');
+                    const alertMessage = 'Error, Cannot found any answer! Please try again.';
+                    Alert.alert('Error', alertMessage);
+                    Speech.speak(alertMessage);
                 }
 
                 // Clear recorded audio state after submission
@@ -722,6 +728,20 @@ const ListenLesson = ({ route, navigation }) => {
 
     // Adjust to center the text based on the screen size
     const screenHeight = Dimensions.get('window').height;
+
+    useEffect(() => {
+        // Trigger speech when the modal becomes visible
+        if (isResultModalVisible) {
+            const message = `
+                Quiz Completed! 
+                You have answered all questions. 
+                Correct Answers: ${correctAnswersCount}. 
+                Total Questions: ${quizData.length}. 
+                Your Score: ${(correctAnswersCount / quizData.length) * 100}%.
+            `;
+            Speech.speak(message);
+        }
+    }, [isResultModalVisible]);
 
     return (
         <View style={styles.container}>
@@ -846,6 +866,7 @@ const ListenLesson = ({ route, navigation }) => {
 
                                 <TouchableOpacity
                                     onPress={() => {
+                                        Speech.speak("close");
                                         setIsResultModalVisible(false);
                                         navigation.goBack(); // Navigate back to LessonCategory.js
                                         handleLessonCompletion();

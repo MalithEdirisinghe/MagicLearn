@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'; // For icons
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; // For arrow icon
 import { LinearGradient } from 'expo-linear-gradient'; // For gradient background
 import { useNavigation } from '@react-navigation/native'; // Import navigation
+import * as Speech from 'expo-speech';;
 
 const screenHeight = Dimensions.get('window').height; // Declare screenHeight globally
 
@@ -24,7 +25,13 @@ const CaptureLearn = () => {
     };
 
     const handleViewSavedText = () => {
+        Speech.speak("Do a previous lesson");
         navigation.navigate('SavedText');
+    }; 
+    
+    const handleScanLesson = () => {
+        Speech.speak("Scan new lesson");
+        navigation.navigate('ScanLessonScreen');
     };
 
     // Use useEffect to set the greeting when the component mounts
@@ -63,7 +70,7 @@ const CaptureLearn = () => {
                 {/* Option Buttons */}
                 <TouchableOpacity
                     style={styles.optionButton}
-                    onPress={() => navigation.navigate('ScanLessonScreen')} // Navigate to ScanLessonScreen
+                    onPress={handleScanLesson} // Navigate to ScanLessonScreen
                 >
                     <View style={styles.optionContent}>
                         <Icon name="barcode" size={24} color="#4A4A4A" />

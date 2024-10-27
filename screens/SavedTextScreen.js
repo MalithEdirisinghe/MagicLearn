@@ -51,6 +51,11 @@ const SavedTextScreen = ({ navigation }) => {
         }
     };
 
+    const handleBack = () => {
+        Speech.speak('back');
+        navigation.goBack();
+    }
+
     // Handle deleting a saved text
     const handleDeleteText = (index) => {
         const updatedTexts = [...savedTexts];
@@ -92,7 +97,7 @@ const SavedTextScreen = ({ navigation }) => {
             </ScrollView>
             <TouchableOpacity
                 style={styles.backButton}
-                onPress={() => navigation.goBack()}
+                onPress={handleBack}
             >
                 <Text style={styles.backButtonText}>Back</Text>
             </TouchableOpacity>

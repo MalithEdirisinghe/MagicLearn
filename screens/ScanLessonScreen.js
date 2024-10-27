@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
+import * as Speech from 'expo-speech'; // Import Speech module
 import { useNavigation } from '@react-navigation/native'; // Import navigation hook
 
 const ScanLessonScreen = () => {
     const [imageUri, setImageUri] = useState(null);
     const navigation = useNavigation(); // Initialize navigation
+
+    // Trigger speech when the screen loads
+    useEffect(() => {
+        Speech.speak("how to begin");
+        const instructions = "Please select a small paragraph of text you'd like your child to learn. The app will scan the text, read it aloud, and generate questions about key nouns and verbs in the paragraph. This will help reinforce your child's understanding of the content. Tap 'Continue' to begin.";
+        Speech.speak(instructions);
+    }, []); // Run once when the component mounts
 
     // Function to handle image selection from camera or gallery
     const handleImageSelection = async (option) => {
@@ -21,7 +29,9 @@ const ScanLessonScreen = () => {
 
         // If permission is not granted, show an alert
         if (permissionResult.granted === false) {
-            Alert.alert("Permission Denied", "You need to allow permission to access the camera or gallery.");
+            const alertMessage = "Permission Denied. You need to allow permission to access the camera or gallery.";
+            Alert.alert("Permission Denied", alertMessage);
+            Speech.speak(alertMessage); // Speak the alert message
             return;
         }
 
@@ -44,7 +54,7 @@ const ScanLessonScreen = () => {
 
         // If user cancels, don't do anything
         if (!result.canceled) {
-            const uri = result.assets[0].uri;  // Access the uri from the first asset
+            const uri = result.assets[0].uri; // Access the uri from the first asset
             console.log("Image URI:", uri); // Log the image URI
             setImageUri(uri); // Save the selected image's URI
             navigation.navigate('DisplayImageScreen', { imageUri: uri }); // Navigate to new screen with image URI
@@ -55,6 +65,7 @@ const ScanLessonScreen = () => {
 
     // Function to display a menu for choosing between camera or gallery
     const openImagePickerMenu = () => {
+        Speech.speak('start your lesson');
         Alert.alert(
             "Select Image",
             "Choose an option to select an image",

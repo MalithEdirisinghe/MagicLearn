@@ -21,6 +21,7 @@ const QuizScreen = ({ route }) => {
     const [apiResponse, setApiResponse] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     const navigation = useNavigation();
 
     const questions = [
@@ -28,14 +29,32 @@ const QuizScreen = ({ route }) => {
         'What are the Verbs of this lesson?'
     ];
 
+    // Speak the question when the current question index changes
     useEffect(() => {
         if (currentQuestionIndex < questions.length) {
             Speech.speak(questions[currentQuestionIndex]);
         }
     }, [currentQuestionIndex]);
 
+    // Speak the quiz results when the modal is visible
+    useEffect(() => {
+        if (modalVisible && apiResponse) {
+            const resultsText = `
+                Quiz Results. 
+                Advice: ${apiResponse.advice}. 
+                Nouns Message: ${apiResponse.nouns_message}. 
+                Nouns Match: ${apiResponse.nouns_percentage} percent. 
+                Verbs Message: ${apiResponse.verbs_message}. 
+                Verbs Match: ${apiResponse.verbs_percentage} percent.
+            `;
+            Speech.speak(resultsText);
+        }
+    }, [modalVisible, apiResponse]);
+
     const startRecording = async () => {
         try {
+            Speech.speak('Recording start');
+            await delay(1500);
             const permission = await Audio.requestPermissionsAsync();
             if (permission.status === 'granted') {
                 await Audio.setAudioModeAsync({
@@ -56,6 +75,7 @@ const QuizScreen = ({ route }) => {
     };
 
     const stopRecording = async () => {
+        Speech.speak('Recording stop');
         setRecording(undefined);
         await recording.stopAndUnloadAsync();
         const uri = recording.getURI();
@@ -71,8 +91,13 @@ const QuizScreen = ({ route }) => {
     };
 
     const playRecording = async () => {
+        if (!sound) {
+            Speech.speak('play recording');
+        }
+        await delay(1500);
         if (sound) {
             // Stop the playback if audio is currently playing
+            Speech.speak('stop speech record');
             await sound.stopAsync();
             setIsPlaying(false);
             return;
@@ -96,6 +121,7 @@ const QuizScreen = ({ route }) => {
     };
 
     const handleNextQuestion = () => {
+        Speech.speak('next question');
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setRecordedUri(null); // Reset recorded URI to allow a new recording
@@ -103,6 +129,7 @@ const QuizScreen = ({ route }) => {
     };
 
     const submitRecording = async () => {
+        Speech.speak('submit recording');
         if (!nounsRecordedUri || !verbsRecordedUri) {
             Alert.alert('Error', 'Please record both nouns and verbs answers before submitting.');
             return;
@@ -197,7 +224,7 @@ const QuizScreen = ({ route }) => {
                         </TouchableOpacity>
                     ) : (
                         <TouchableOpacity style={styles.submitButton} onPress={submitRecording}>
-                                <Text style={styles.nextText}>Submit Recording</Text>
+                            <Text style={styles.nextText}>Submit Recording</Text>
                         </TouchableOpacity>
                     )}
                 </View>
@@ -232,6 +259,7 @@ const QuizScreen = ({ route }) => {
                         <TouchableOpacity
                             style={styles.closeButton}
                             onPress={() => {
+                                Speech.speak('close');
                                 setModalVisible(false);
                                 navigation.navigate('CaptureLearn');
                             }}

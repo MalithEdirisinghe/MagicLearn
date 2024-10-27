@@ -24,6 +24,7 @@ const DisplayImageScreen = ({ route, navigation }) => {
 
     // Handle Submit button press
     const handleSubmit = async () => {
+        Speech.speak('submit');
         if (!imageUri) {
             Alert.alert('No Image Selected', 'Please select an image first.');
             return;
@@ -66,6 +67,7 @@ const DisplayImageScreen = ({ route, navigation }) => {
 
     // Handle Retake button press
     const handleRetake = () => {
+        Speech.speak('retake');
         navigation.goBack();
     };
 
@@ -75,6 +77,7 @@ const DisplayImageScreen = ({ route, navigation }) => {
 
     // Handle Play button press
     const handlePlay = () => {
+        Speech.speak('play extracted text');
         if (extractedText) {
             Speech.speak(extractedText, {
                 rate: speechRate,
@@ -92,6 +95,7 @@ const DisplayImageScreen = ({ route, navigation }) => {
     const handlePause = () => {
         Speech.stop();
         setIsSpeaking(false);
+        Speech.speak('extracted text speech stopped');
     };
 
     const handleSave = async () => {
@@ -131,6 +135,7 @@ const DisplayImageScreen = ({ route, navigation }) => {
 
     // Handle "Start the Quiz" button press
     const handleStartQuiz = () => {
+        Speech.speak('Start the Quiz');
         navigation.navigate('LessonQuiz', {
             nouns: nouns, // Pass nouns as a parameter
             verbs: verbs, // Pass verbs as a parameter
@@ -232,6 +237,7 @@ const DisplayImageScreen = ({ route, navigation }) => {
                             onPress={() => {
                                 setIsModalVisible(false);
                                 Speech.stop();
+                                Speech.speak('close');
                             }}
                         >
                             <Text style={styles.closeButtonText}>Close</Text>
