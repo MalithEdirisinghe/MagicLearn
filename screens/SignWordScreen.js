@@ -147,7 +147,7 @@ const SignWordScreen = ({ route, navigation }) => {
                     setIsIncorrect(false);
                     setResults(prevResults => [...prevResults, { word: currentWord, correct: true }]);
                 } else {
-                    setFeedbackMessage(`Your answer is incorrect.\nPlease Try Again!\nThe correct word is: ${currentWord}`);
+                    setFeedbackMessage(`Your answer is incorrect.\nIt' s alright. Do Your Best Next Time.\nThe correct word is: ${currentWord}`);
                     setIsIncorrect(true);
                     setIsCorrect(false);
                     setResults(prevResults => [...prevResults, { word: currentWord, correct: false }]);
