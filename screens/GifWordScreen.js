@@ -117,10 +117,12 @@ const GifWordScreen = () => {
             if (response.ok) {
                 const responseData = await response.json();
                 const currentGifName = questionsForCurrentLevel[currentGifIndex].name;
-                const apiResponse = responseData.predicted_class;
+                const apiResponse = responseData.extracted_text;
+                console.log('api response: ', apiResponse);
+                console.log('current: ', currentGifName);
 
-                // if (currentGifName === apiResponse) {
-                if (currentGifName === currentGifName) {
+                if (currentGifName.toLocaleLowerCase() === apiResponse) {
+                // if (currentGifName === currentGifName) {
                     setShowCorrectModal(true);
                     setShowIncorrectModal(false);
                 } else {

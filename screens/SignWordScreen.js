@@ -137,16 +137,17 @@ const SignWordScreen = ({ route, navigation }) => {
             if (response.ok) {
                 const data = await response.json();
                 const { percentage, result } = data;
+                console.log("Current: ", currentWord);
 
                 // Check if the result matches the current word
-                // if (currentWord.toLowerCase() === result.toLowerCase()) {
-                if (currentWord.toLowerCase() === currentWord.toLowerCase()) {
+                if (currentWord.toLowerCase() === result.toLowerCase()) {
+                // if (currentWord.toLowerCase() === currentWord.toLowerCase()) {
                     setFeedbackMessage(`Your answer is correct!\nPredicted: ${result}\nConfidence: ${percentage}`);
                     setIsCorrect(true);
                     setIsIncorrect(false);
                     setResults(prevResults => [...prevResults, { word: currentWord, correct: true }]);
                 } else {
-                    setFeedbackMessage(`Your answer is incorrect.\nYou showed: ${result}\nThe correct word is: ${currentWord}\nConfidence: ${percentage}`);
+                    setFeedbackMessage(`Your answer is incorrect.\nIt' s alright. Do Your Best Next Time.\nThe correct word is: ${currentWord}`);
                     setIsIncorrect(true);
                     setIsCorrect(false);
                     setResults(prevResults => [...prevResults, { word: currentWord, correct: false }]);
@@ -161,19 +162,19 @@ const SignWordScreen = ({ route, navigation }) => {
             Alert.alert('Error', 'An error occurred while submitting the image.');
         } finally {
             setIsLoading(false); // End loading
-            if (currentWordIndex < words.length - 1) {
-                setCurrentWordIndex(currentWordIndex + 1);
-                setImageUri(null); // Clear the captured image for the next word
-            } else {
-                setQuizFinished(true); // Set quizFinished to true when quiz is completed
-                setShowQuiz(false); // End the quiz
-                setQuizStarted(false); // Reset quiz state
-            }
         }
     };
 
     const feedbackOkay = () => {
         setShowFeedbackModal(false);
+        if (currentWordIndex < words.length - 1) {
+            setCurrentWordIndex(currentWordIndex + 1);
+            setImageUri(null); // Clear the captured image for the next word
+        } else {
+            setQuizFinished(true); // Set quizFinished to true when quiz is completed
+            setShowQuiz(false); // End the quiz
+            setQuizStarted(false); // Reset quiz state
+        }
         if (quizFinished) {
             setShowResultsModal(true); // Show the results modal if the quiz is finished
             setQuizFinished(false); // Reset the quizFinished state
@@ -478,7 +479,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 1,
-    }, loadingOverlay: {
+    }, 
+    loadingOverlay: {
         position: 'absolute',
         top: 0,
         left: 0,

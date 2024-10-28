@@ -97,8 +97,8 @@ const QuizScreen = ({ route, navigation }) => {
                 console.log('predict: ', predictedClass);
                 console.log('current: ', currentQuestion);
 
-                // if (predictedClass === currentQuestion) {
-                if (currentQuestion === currentQuestion) {
+                if (predictedClass === currentQuestion) {
+                // if (currentQuestion === currentQuestion) {
                     setIsCorrect(true);
                     setModalMessage('Your answer is correct!');
                 } else {

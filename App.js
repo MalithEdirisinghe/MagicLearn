@@ -11,7 +11,7 @@ import HomeScreen from './screens/HomeScreen';
 import BlindHomeScreen from './screens/BlindHomeScreen';
 import BlindLesQuizScreen from './screens/BlindLesQuizScreen';
 import LessonCategoryScreen from './screens/LessonCategoryScreen';
-import BlindLessonScreen from './screens/BlindLessonScreen';
+// import BlindLessonScreen from './screens/BlindLessonScreen';
 import MuteHomeScreen from './screens/MuteHomeScreen';
 import LearnSignLanguageScreen from './screens/LearnSignLanguageScreen';
 import ASLScreen from './screens/ASLScreen';
@@ -31,7 +31,10 @@ import QuizScreen from './screens/QuizScreen';
 import SignWordScreen from './screens/SignWordScreen';
 import ASLInstructionScreen from './screens/ASLInstructionScreen';
 import SignWordRangeScreen from './screens/SignWordRangeScreen';
+import SavedTextScreen from './screens/SavedTextScreen';
+import TextDetailScreen from './screens/TextDetailScreen';
 import Toast from 'react-native-toast-message';
+import { MenuProvider } from 'react-native-popup-menu';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +44,7 @@ const ToastContainer = React.forwardRef((props, ref) => (
 
 const App = () => {
   return (
+    <MenuProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
@@ -124,6 +128,16 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="SavedText"
+          component={SavedTextScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="TextDetail"
+          component={TextDetailScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="SignWordScreen"
           component={SignWordScreen}
           options={{ headerShown: true, title: '', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#5B3CBB' } }}
@@ -156,11 +170,11 @@ const App = () => {
           component={LessonCategoryScreen}
           options={{ title: 'Category', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Lesson"
           component={BlindLessonScreen}
           options={{ title: 'Select Category', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
-        />
+        /> */}
         <Stack.Screen
           name="MuteHome"
           component={MuteHomeScreen}
@@ -186,14 +200,10 @@ const App = () => {
           component={MuteGifScreen}
           options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
         />
-        {/* <Stack.Screen
-          name="GifWord"
-          component={GifWordScreen}
-          options={{ title: 'Learn Sign Language', headerTitleAlign: 'center', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#4D86F7' } }}
-        /> */}
       </Stack.Navigator>
       <ToastContainer />
     </NavigationContainer>
+    </MenuProvider>
   );
 };
 

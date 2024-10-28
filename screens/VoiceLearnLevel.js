@@ -1,10 +1,16 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import * as Speech from 'expo-speech'; // Import the Speech module
 
 const VoiceLearnLevel = ({ navigation }) => {
 
     const handleLevelPress = (level) => {
         navigation.navigate('VoiceLearnHome', { level });
+    };
+
+    // Function to speak the text
+    const speak = (text) => {
+        Speech.speak(text);
     };
 
     return (
@@ -17,21 +23,39 @@ const VoiceLearnLevel = ({ navigation }) => {
             </View>
 
             {/* Level List */}
-            <TouchableOpacity style={styles.levelButton} onPress={() => handleLevelPress(1)}>
+            <TouchableOpacity
+                style={styles.levelButton}
+                onPress={() => {
+                    speak('Level 1');
+                    handleLevelPress(1);
+                }}
+            >
                 <Text style={styles.levelText}>Level 1</Text>
                 <View style={[styles.badge, styles.easyBadge]}>
                     <Text style={styles.badgeText}>EASY</Text>
                 </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.levelButton} onPress={() => handleLevelPress(2)}>
+            <TouchableOpacity
+                style={styles.levelButton}
+                onPress={() => {
+                    speak('Level 2');
+                    handleLevelPress(2);
+                }}
+            >
                 <Text style={styles.levelText}>Level 2</Text>
                 <View style={[styles.badge, styles.mediumBadge]}>
                     <Text style={styles.badgeText}>MEDIUM</Text>
                 </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.levelButton} onPress={() => handleLevelPress(3)}>
+            <TouchableOpacity
+                style={styles.levelButton}
+                onPress={() => {
+                    speak('Level 3');
+                    handleLevelPress(3);
+                }}
+            >
                 <Text style={styles.levelText}>Level 3</Text>
                 <View style={[styles.badge, styles.hardBadge]}>
                     <Text style={styles.badgeText}>HARD</Text>
@@ -44,7 +68,7 @@ const VoiceLearnLevel = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#E5E9FF', // Light blue background
+        backgroundColor: '#E5E9FF',
         padding: 20,
     },
     header: {

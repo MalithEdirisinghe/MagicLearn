@@ -20,6 +20,7 @@ const BrailleTeachScreen = ({ navigation }) => {
     const handleStartBtn = () => {
         // Stop the speech when navigating to another screen
         Speech.stop();
+        Speech.speak('START');
         navigation.navigate('Menu');
     }
 

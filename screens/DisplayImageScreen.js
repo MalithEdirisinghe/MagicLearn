@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal, ScrollView, ActivityIndicator, TextInput } from 'react-native';
 import * as Speech from 'expo-speech';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Entypo } from '@expo/vector-icons';
+import { Base_url1 } from './baseUrl';
+import Slider from '@react-native-community/slider';
 
 const DisplayImageScreen = ({ route, navigation }) => {
     const { imageUri } = route.params;
@@ -11,14 +13,18 @@ const DisplayImageScreen = ({ route, navigation }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
+    const [topicModalVisible, setTopicModalVisible] = useState(false);
     const [isSpeechFinished, setIsSpeechFinished] = useState(false);
+    const [topicName, setTopicName] = useState('')
     const [isQuizModalVisible, setIsQuizModalVisible] = useState(false); // State for quiz modal
     const [nouns, setNouns] = useState(''); // State for storing nouns
     const [verbs, setVerbs] = useState(''); // State for storing verbs
     const [loading, setLoading] = useState(false); // Loading state for progress
+    const [speechRate, setSpeechRate] = useState(1.0);
 
     // Handle Submit button press
     const handleSubmit = async () => {
+        Speech.speak('submit');
         if (!imageUri) {
             Alert.alert('No Image Selected', 'Please select an image first.');
             return;
@@ -33,7 +39,7 @@ const DisplayImageScreen = ({ route, navigation }) => {
 
         try {
             setLoading(true); // Start the loading spinner
-            const response = await fetch('http://13.60.250.75/blind/readText', {
+            const response = await fetch(Base_url1 + "/blind/readText", {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -61,13 +67,20 @@ const DisplayImageScreen = ({ route, navigation }) => {
 
     // Handle Retake button press
     const handleRetake = () => {
+        Speech.speak('retake');
         navigation.goBack();
+    };
+
+    const handleViewSavedText = () => {
+        navigation.navigate('SavedText');
     };
 
     // Handle Play button press
     const handlePlay = () => {
+        Speech.speak('play extracted text');
         if (extractedText) {
             Speech.speak(extractedText, {
+                rate: speechRate,
                 onDone: () => {
                     setIsSpeaking(false);
                     setIsSpeechFinished(true);
@@ -82,22 +95,47 @@ const DisplayImageScreen = ({ route, navigation }) => {
     const handlePause = () => {
         Speech.stop();
         setIsSpeaking(false);
+        Speech.speak('extracted text speech stopped');
     };
 
-    // Handle Save option press (Save text to AsyncStorage)
     const handleSave = async () => {
+        if (!topicName.trim()) {
+            Alert.alert('Error', 'Please enter a topic name before saving.');
+            return;
+        }
+
         try {
-            await AsyncStorage.setItem('extractedText', extractedText);
-            Alert.alert('Saved', 'Text saved successfully to local storage!');
+            const newEntry = {
+                topic: topicName,
+                text: extractedText,
+                nouns: nouns, // Save nouns
+                verbs: verbs  // Save verbs
+            };
+
+            // Fetch the existing texts from AsyncStorage
+            const existingTexts = await AsyncStorage.getItem('extractedTexts');
+            let textsArray = existingTexts ? JSON.parse(existingTexts) : [];
+
+            // Add the new entry with topic name, extracted text, nouns, and verbs to the array
+            textsArray.push(newEntry);
+
+            // Save the updated array to AsyncStorage
+            await AsyncStorage.setItem('extractedTexts', JSON.stringify(textsArray));
+
+            Alert.alert('Saved', 'Text saved successfully with topic name!');
+            setTopicName(''); // Clear topic name input
         } catch (error) {
             console.error('Error saving text:', error);
             Alert.alert('Error', 'Failed to save text.');
         }
+
+        setTopicModalVisible(false); // Close the topic input modal
         setIsOptionsModalVisible(false);
     };
 
     // Handle "Start the Quiz" button press
     const handleStartQuiz = () => {
+        Speech.speak('Start the Quiz');
         navigation.navigate('LessonQuiz', {
             nouns: nouns, // Pass nouns as a parameter
             verbs: verbs, // Pass verbs as a parameter
@@ -123,7 +161,6 @@ const DisplayImageScreen = ({ route, navigation }) => {
             {/* Buttons for Submit and Retake */}
             <View style={styles.buttonContainer}>
                 {loading ? (
-                    // Display the loading indicator while the request is in progress
                     <ActivityIndicator size="large" color="#FFA500" />
                 ) : (
                     <>
@@ -146,7 +183,6 @@ const DisplayImageScreen = ({ route, navigation }) => {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        {/* Three-dot button */}
                         <TouchableOpacity
                             style={styles.threeDotButton}
                             onPress={() => setIsOptionsModalVisible(true)}
@@ -158,6 +194,22 @@ const DisplayImageScreen = ({ route, navigation }) => {
                         <ScrollView>
                             <Text style={styles.extractedText}>{extractedText}</Text>
                         </ScrollView>
+
+                        {/* Speech Speed Slider */}
+                        <View style={styles.sliderContainer}>
+                            <Text style={styles.sliderLabel}>Speech Speed: {speechRate.toFixed(1)}x</Text>
+                            <Slider
+                                style={styles.slider}
+                                minimumValue={0.5}
+                                maximumValue={2.0}
+                                value={speechRate}
+                                onValueChange={(value) => setSpeechRate(value)}
+                                minimumTrackTintColor="#FFA500"
+                                maximumTrackTintColor="#000"
+                                thumbTintColor="#FFA500"
+                                step={0.1}
+                            />
+                        </View>
 
                         {/* Play and Pause buttons */}
                         <View style={styles.audioControls}>
@@ -171,7 +223,6 @@ const DisplayImageScreen = ({ route, navigation }) => {
                                 </TouchableOpacity>
                             )}
                         </View>
-
                         {/* Start Quiz Button */}
                         <TouchableOpacity
                             style={[styles.startQuizButton, { opacity: isSpeechFinished ? 1 : 0.5 }]}
@@ -186,6 +237,7 @@ const DisplayImageScreen = ({ route, navigation }) => {
                             onPress={() => {
                                 setIsModalVisible(false);
                                 Speech.stop();
+                                Speech.speak('close');
                             }}
                         >
                             <Text style={styles.closeButtonText}>Close</Text>
@@ -194,7 +246,33 @@ const DisplayImageScreen = ({ route, navigation }) => {
                 </View>
             </Modal>
 
-            {/* Options Modal (for Save) */}
+            {/* Modal for Save with Topic Name */}
+            <Modal
+                visible={topicModalVisible}
+                transparent={true}
+                animationType="slide"
+                onRequestClose={() => setTopicModalVisible(false)}
+            >
+                <View style={styles.optionsModalContainer}>
+                    <View style={styles.optionsModalContent}>
+                        <Text style={styles.optionText}>Enter Topic Name:</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={topicName}
+                            onChangeText={(text) => setTopicName(text)}
+                            placeholder="Topic name"
+                        />
+                        <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
+                            <Text style={styles.optionText}>Save</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setTopicModalVisible(false)}>
+                            <Text style={styles.optionText}>Cancel</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
+            {/* Options Modal */}
             <Modal
                 visible={isOptionsModalVisible}
                 transparent={true}
@@ -203,8 +281,8 @@ const DisplayImageScreen = ({ route, navigation }) => {
             >
                 <View style={styles.optionsModalContainer}>
                     <View style={styles.optionsModalContent}>
-                        <TouchableOpacity onPress={handleSave}>
-                            <Text style={styles.optionText}>Save</Text>
+                        <TouchableOpacity onPress={() => setTopicModalVisible(true)}>
+                            <Text style={styles.optionText}>Save with Topic</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setIsOptionsModalVisible(false)}>
                             <Text style={styles.optionText}>Cancel</Text>
@@ -214,7 +292,6 @@ const DisplayImageScreen = ({ route, navigation }) => {
             </Modal>
         </View>
     );
-
 };
 
 const styles = StyleSheet.create({
@@ -391,6 +468,54 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
+    sliderContainer: {
+        width: '100%',
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    sliderLabel: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    slider: {
+        width: '90%',
+        height: 40,
+    },
+    viewSavedButton: {
+        width: '90%',
+        backgroundColor: '#FFA500',
+        paddingVertical: 15,
+        borderRadius: 30,
+        marginTop: 20,
+        alignItems: 'center',
+    },
+    viewSavedButtonText: {
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    input: {
+        width: '80%',
+        height: 40,
+        borderColor: '#DDD',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        marginBottom: 10,
+    },
+    saveButton: {
+        backgroundColor: '#FFA500',
+        padding: 10,
+        borderRadius: 5,
+        marginTop: 10,
+        alignItems: 'center',
+    },
+    optionText: {
+        fontSize: 18,
+        padding: 10,
+    },
+
 });
 
 export default DisplayImageScreen;

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { speak } from "expo-speech";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
@@ -42,7 +41,7 @@ const LetterScreen = ({ route }) => {
     const { range } = route.params;
     const [letter, setLetter] = useState(range.charAt(0));
     const [isLastLetter, setIsLastLetter] = useState(false);
-    const navigation = useNavigation(); 
+    const navigation = useNavigation();
 
     const filteredMappings = Object.fromEntries(
         Object.entries(brailleMappings).filter(([key]) => {
@@ -53,9 +52,15 @@ const LetterScreen = ({ route }) => {
     );
 
     useEffect(() => {
-        speakLetter(letter);
+        repeatSpeechThreeTimes(letter);
         checkLastLetter(letter);
     }, [letter]);
+
+    const repeatSpeechThreeTimes = (letter) => {
+        for (let i = 0; i < 3; i++) {
+            speakLetter(letter);
+        }
+    };
 
     const speakLetter = (letter) => {
         const braillePattern = filteredMappings[letter];
@@ -68,9 +73,7 @@ const LetterScreen = ({ route }) => {
                     }
                 });
             });
-            for (let i = 0; i < 3; i++) {
-                speak(speech, { language: "en", rate: 0.7 });
-            }
+            speak(speech, { language: "en", rate: 0.7 });
         }
     };
 
@@ -88,18 +91,14 @@ const LetterScreen = ({ route }) => {
         navigation.goBack();
     };
 
+    const handleRepeat = () => {
+        repeatSpeechThreeTimes(letter);
+    };
+
     return (
         <View style={styles.container}>
-            {Object.keys(filteredMappings).map((key) => (
-                <TouchableOpacity
-                    key={key}
-                    style={styles.letterButton}
-                    onPress={() => setLetter(key)}
-                >
-                </TouchableOpacity>
-            ))}
             <Text style={styles.letter}>
-                Letter <Text style={{ color: "red", fontSize: 45 }}>{letter}</Text>
+                Letter <Text style={styles.letterHighlight}>{letter}</Text>
             </Text>
             <Image
                 style={styles.speaker}
@@ -114,12 +113,18 @@ const LetterScreen = ({ route }) => {
                     </View>
                 ))}
             </View>
-            {isLastLetter ? null : (
+
+            <TouchableOpacity style={styles.repeatButton} onPress={handleRepeat}>
+                <Text style={styles.buttonText}>Repeat</Text>
+            </TouchableOpacity>
+
+            {!isLastLetter && (
                 <TouchableOpacity style={styles.nextButton} onPress={nextButton}>
-                    <Text style={styles.nextText}>Next</Text>
+                    <Text style={styles.buttonText}>Next</Text>
                 </TouchableOpacity>
             )}
-            {!isLastLetter ? null : (
+
+            {isLastLetter && (
                 <TouchableOpacity style={styles.backButton} onPress={handleBack}>
                     <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
                 </TouchableOpacity>
@@ -130,63 +135,82 @@ const LetterScreen = ({ route }) => {
 
 const styles = StyleSheet.create({
     container: {
-        position: "relative",
-        width: "auto",
-        height: "100%",
-        backgroundColor: "#ffff",
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#f3f4f6", // Light background
+        padding: 20,
     },
     letter: {
-        fontSize: 25,
-        color: "#4D86F7",
-        alignSelf: "center",
-        top: "8%",
+        fontSize: 30,
+        color: "#4A90E2", // Blue color
+        fontWeight: "bold",
+        marginBottom: 20,
+    },
+    letterHighlight: {
+        color: "#FF6347", // Tomato color
+        fontSize: 50,
         fontWeight: "bold",
     },
     speaker: {
-        width: "35%",
-        height: "15%",
-        alignSelf: "center",
-        top: "8%",
+        width: "50%",
+        height: "20%",
+        resizeMode: "contain",
+        marginVertical: 20,
     },
     brailleTxt: {
         flexDirection: "row",
         justifyContent: "center",
-        marginTop: 70,
+        marginBottom: 40,
     },
     brailleRow: {
         flexDirection: "column",
     },
     brailleDot: {
-        width: 20,
-        height: 20,
-        borderRadius: 10,
+        width: 35,
+        height: 35,
+        borderRadius: 17.5,
         backgroundColor: "gray",
-        margin: 15,
+        margin: 10,
     },
     activeDot: {
-        backgroundColor: "blue",
+        backgroundColor: "#4A90E2", // Active dot color
+    },
+    repeatButton: {
+        width: "80%",
+        paddingVertical: 15,
+        backgroundColor: "#4A90E2",
+        borderRadius: 25,
+        marginVertical: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        elevation: 5, // Add shadow
     },
     nextButton: {
-        top: '20%',
-        alignSelf: 'center',
-        backgroundColor: '#4D86F7',
-        borderRadius: 15,
-        height: '25%',
-        width: '40%',
+        width: "80%",
+        paddingVertical: 15,
+        backgroundColor: "#32CD32", // Lime green for Next button
+        borderRadius: 25,
+        marginVertical: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        elevation: 5, // Add shadow
     },
-    nextText: {
-        fontSize: 20,
-        fontWeight: '500',
-        alignSelf: 'center',
-        paddingTop: 15,
+    buttonText: {
+        fontSize: 24,
+        color: "#FFFFFF",
+        fontWeight: "bold",
     },
     backButton: {
         position: "absolute",
-        top: 20,
+        top: 50,
         left: 20,
-        backgroundColor: '#4D86F7',
-        borderRadius: 15,
+        backgroundColor: "#FF6347", // Tomato color
+        borderRadius: 25,
         padding: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        elevation: 5, // Add shadow
     },
 });
 

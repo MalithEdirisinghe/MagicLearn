@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
+import * as Speech from 'expo-speech';
 
 const VoiceLearnHome = ({ route, navigation }) => {
     const { level } = route.params;
@@ -17,7 +18,11 @@ const VoiceLearnHome = ({ route, navigation }) => {
         }
     }, []);
 
-    const handleOptionPress = (option, category) => {
+    const handleOptionPress = (option, category, text) => {
+        // Speak the option text before navigation
+        Speech.speak(text);
+
+        // Navigate to the next screen
         navigation.navigate(option, { category });
     };
 
@@ -25,19 +30,28 @@ const VoiceLearnHome = ({ route, navigation }) => {
         if (level === 1) {
             return (
                 <>
-                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'daily-routines')}>
+                    <TouchableOpacity
+                        style={styles.optionCard}
+                        onPress={() => handleOptionPress('LessonCategory', 'daily-routines', 'Daily Routines')}
+                    >
                         <Image source={require('../assets/daily-routines.png')} style={styles.optionImage} />
                         <View style={styles.overlay} />
                         <Text style={styles.optionText}>Daily Routines</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'animals')}>
+                    <TouchableOpacity
+                        style={styles.optionCard}
+                        onPress={() => handleOptionPress('LessonCategory', 'animals', 'Animals')}
+                    >
                         <Image source={require('../assets/Animals.png')} style={styles.optionImage} />
                         <View style={styles.overlay} />
                         <Text style={styles.optionText}>Animals</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'basic-hygiene')}>
+                    <TouchableOpacity
+                        style={styles.optionCard}
+                        onPress={() => handleOptionPress('LessonCategory', 'basic-hygiene', 'Basic Hygiene')}
+                    >
                         <Image source={require('../assets/basic-hygiene.png')} style={styles.optionImage} />
                         <View style={styles.overlay} />
                         <Text style={styles.optionText}>Basic Hygiene</Text>
@@ -47,19 +61,28 @@ const VoiceLearnHome = ({ route, navigation }) => {
         } else if (level === 2) {
             return (
                 <>
-                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'vegetables-fruits')}>
+                    <TouchableOpacity
+                        style={styles.optionCard}
+                        onPress={() => handleOptionPress('LessonCategory', 'vegetables-fruits', 'Vegetables and Fruits')}
+                    >
                         <Image source={require('../assets/Level 2/vegetables-fruits.jpg')} style={styles.optionImage} />
                         <View style={styles.overlay} />
                         <Text style={styles.optionText}>Vegetables and Fruits</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'patterns-sequences')}>
+                    <TouchableOpacity
+                        style={styles.optionCard}
+                        onPress={() => handleOptionPress('LessonCategory', 'patterns-sequences', 'Patterns and Sequences')}
+                    >
                         <Image source={require('../assets/Level 2/patterns-sequences.jpg')} style={styles.optionImage} />
                         <View style={styles.overlay} />
                         <Text style={styles.optionText}>Patterns and Sequences</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'human-body')}>
+                    <TouchableOpacity
+                        style={styles.optionCard}
+                        onPress={() => handleOptionPress('LessonCategory', 'human-body', 'Human Body')}
+                    >
                         <Image source={require('../assets/Level 2/human-body.jpg')} style={styles.optionImage} />
                         <View style={styles.overlay} />
                         <Text style={styles.optionText}>Human Body</Text>
@@ -69,19 +92,28 @@ const VoiceLearnHome = ({ route, navigation }) => {
         } else if (level === 3) {
             return (
                 <>
-                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'mathematics')}>
+                    <TouchableOpacity
+                        style={styles.optionCard}
+                        onPress={() => handleOptionPress('LessonCategory', 'mathematics', 'Mathematics')}
+                    >
                         <Image source={require('../assets/Level 3/mathematics.jpg')} style={styles.optionImage} />
                         <View style={styles.overlay} />
                         <Text style={styles.optionText}>Mathematics</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'time-and-days')}>
+                    <TouchableOpacity
+                        style={styles.optionCard}
+                        onPress={() => handleOptionPress('LessonCategory', 'time-and-days', 'Time and Days of the Week')}
+                    >
                         <Image source={require('../assets/Level 3/time-days-week.jpg')} style={styles.optionImage} />
                         <View style={styles.overlay} />
                         <Text style={styles.optionText}>Time and Days of the Week</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.optionCard} onPress={() => handleOptionPress('LessonCategory', 'geography')}>
+                    <TouchableOpacity
+                        style={styles.optionCard}
+                        onPress={() => handleOptionPress('LessonCategory', 'geography', 'Geography')}
+                    >
                         <Image source={require('../assets/Level 3/geography.jpg')} style={styles.optionImage} />
                         <View style={styles.overlay} />
                         <Text style={styles.optionText}>Geography</Text>
@@ -174,7 +206,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginBottom: 15,
         overflow: 'hidden',
-        position: 'relative', // Add relative positioning for the overlay
+        position: 'relative',
     },
     optionImage: {
         width: '100%',
@@ -183,7 +215,7 @@ const styles = StyleSheet.create({
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dark transparent overlay
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         borderRadius: 15,
     },
     optionText: {
